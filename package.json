@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "node_modules\\.bin\\next.cmd dev",
-    "build": "node_modules\\.bin\\next.cmd build",
-    "start": "node_modules\\.bin\\next.cmd start",
-    "lint": "node_modules\\.bin\\next.cmd lint"
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "14.2.5",
