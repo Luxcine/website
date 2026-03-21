@@ -33,8 +33,15 @@ export default function Footer() {
             </div>
             <p className="text-[12px] text-[#E8E4DC]/30 leading-loose font-light max-w-[220px]">
               Private cinema design for discerning clients, architects and developers.
-              Algarve · London.
             </p>
+            <div className="mt-4 space-y-1.5 text-[11px] text-[#E8E4DC]/20 font-light">
+              <p>Quinta do Lago — Algarve, Portugal</p>
+              <p>Lisboa, Portugal</p>
+              <a href="mailto:geral@luxurycine.com"
+                className="block text-[#9C8660]/50 hover:text-[#9C8660]/80 transition-colors duration-300">
+                geral@luxurycine.com
+              </a>
+            </div>
           </div>
 
           {/* Nav */}

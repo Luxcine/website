@@ -35,7 +35,7 @@ export default function Navigation() {
         <div className="max-w-[1520px] mx-auto px-8 md:px-14 h-[72px] flex items-center justify-between">
 
           <a href="/" className="flex-shrink-0 opacity-90 hover:opacity-100 transition-opacity duration-300">
-            <Image src="/assets/logos/luxcine-white.svg" alt="LuxuryCine" width={124} height={52} priority />
+            <Image src="/assets/logos/luxcine-white.svg" alt="LuxuryCine" width={164} height={68} priority />
           </a>
 
           {/* Centre nav — desktop */}
