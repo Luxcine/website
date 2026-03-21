@@ -28,7 +28,7 @@ export default function Navigation() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed inset-x-0 top-[36px] z-50 transition-colors duration-700 ${
+        className={`fixed inset-x-0 top-[48px] z-50 transition-colors duration-700 ${
           scrolled ? 'bg-[#080808]/90 backdrop-blur-md' : 'bg-transparent'
         }`}
       >
