@@ -4,96 +4,60 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import Image from 'next/image'
 
+const fade = (delay = 0) => ({
+  initial: { opacity: 0, y: 16 },
+  transition: { duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] as const },
+})
+
 export default function BrandStatement() {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const inView = useInView(ref, { once: true, margin: '-120px' })
 
   return (
-    <section id="brand" ref={ref} className="py-32 md:py-48 bg-[#0D0D0D]">
-      <div className="max-w-[1600px] mx-auto px-8 md:px-16">
-        <div className="grid md:grid-cols-2 gap-24 items-center">
+    <section id="brand" ref={ref} className="bg-[#080808]">
+      {/* Top rule */}
+      <div className="h-px bg-[#E8E4DC]/6" />
 
-          {/* Left — image */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="relative aspect-[3/4] overflow-hidden"
-          >
-            <Image
-              src="/assets/images/cinema-01.jpg"
-              alt="Private Cinema Interior"
-              fill
-              quality={85}
-              className="object-cover"
-            />
-            {/* Gold accent border */}
-            <div className="absolute bottom-0 left-0 w-16 h-px bg-[#B8975A]" />
-            <div className="absolute bottom-0 left-0 w-px h-16 bg-[#B8975A]" />
+      <div className="max-w-[1520px] mx-auto px-8 md:px-14 py-36 md:py-52">
+        <div className="grid md:grid-cols-12 gap-8 items-start">
+
+          {/* Left col — image */}
+          <motion.div {...fade(0)} animate={inView ? { opacity: 1, y: 0 } : {}}
+            className="md:col-span-5 relative aspect-[2/3] overflow-hidden">
+            <Image src="/assets/images/cinema-01.jpg" alt="Private Cinema" fill quality={85}
+              className="object-cover grayscale-[15%]" />
+            {/* Architectural corner mark */}
+            <div className="absolute top-0 left-0 w-8 h-px bg-[#9C8660]/50" />
+            <div className="absolute top-0 left-0 w-px h-8 bg-[#9C8660]/50" />
           </motion.div>
 
-          {/* Right — text */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="flex items-center gap-4 mb-10"
-            >
-              <span className="inline-block w-8 h-px bg-[#B8975A]" />
-              <span className="text-[10px] tracking-[0.35em] uppercase text-[#B8975A]">
-                Our Philosophy
-              </span>
-            </motion.div>
+          {/* Right col — offset lower for editorial feel */}
+          <div className="md:col-span-6 md:col-start-7 md:pt-24 space-y-12">
+            <motion.p {...fade(0.2)} animate={inView ? { opacity: 1, y: 0 } : {}}
+              className="text-[9px] tracking-[0.38em] uppercase text-[#9C8660]">
+              Our Philosophy
+            </motion.p>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="font-serif text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] text-[#F5F0E8] mb-10"
-            >
-              A cinema room
-              <br />
-              is not a room.
-              <br />
-              <em className="italic text-[#B8975A]">It is an experience.</em>
+            <motion.h2 {...fade(0.35)} animate={inView ? { opacity: 1, y: 0 } : {}}
+              className="font-['Cormorant_Garamond'] font-light text-[clamp(2.4rem,4.5vw,4.2rem)] leading-[1.06] text-[#E8E4DC]">
+              A cinema room is not a room.<br />
+              <em className="text-[#9C8660]">It is an experience.</em>
             </motion.h2>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="space-y-6 text-[15px] font-light text-[#F5F0E8]/60 leading-relaxed"
-            >
-              <p>
-                LuxuryCine was born from a simple conviction: the finest private cinemas
-                are not installed — they are designed. Every space we create begins with
-                architecture, not equipment.
-              </p>
-              <p>
-                We work alongside architects, interior designers and discerning clients
-                to conceive spaces where acoustic precision, visual perfection and
-                architectural integrity exist as one seamless whole.
-              </p>
-              <p>
-                The technology disappears. The experience remains.
-              </p>
+            <motion.div {...fade(0.5)} animate={inView ? { opacity: 1, y: 0 } : {}}
+              className="space-y-5 text-[13px] text-[#E8E4DC]/45 leading-loose font-light max-w-sm">
+              <p>LuxuryCine was born from a simple conviction: the finest private cinemas are not installed — they are designed. Every space begins with architecture, not equipment.</p>
+              <p>We work alongside architects and interior designers to conceive spaces where acoustic precision, visual perfection and architectural integrity exist as one seamless whole.</p>
+              <p className="text-[#E8E4DC]/60 italic font-['Cormorant_Garamond'] text-base">The technology disappears. The experience remains.</p>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="mt-14 pt-10 border-t border-[#F5F0E8]/10 grid grid-cols-3 gap-8"
-            >
-              {[
-                { number: '12+', label: 'Years of Craft' },
-                { number: '60+', label: 'Spaces Designed' },
-                { number: '100%', label: 'Bespoke' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="font-serif text-3xl text-[#B8975A] font-light mb-1">{stat.number}</div>
-                  <div className="text-[10px] tracking-[0.2em] uppercase text-[#F5F0E8]/40">{stat.label}</div>
+            {/* Stats — B&O precision */}
+            <motion.div {...fade(0.65)} animate={inView ? { opacity: 1, y: 0 } : {}}
+              className="pt-10 border-t border-[#E8E4DC]/6 grid grid-cols-3 gap-0">
+              {[['12+', 'Years'], ['60+', 'Spaces'], ['100%', 'Bespoke']].map(([n, l]) => (
+                <div key={l} className="pr-6 border-r border-[#E8E4DC]/6 last:border-0 last:pl-6 first:pl-0 [&:not(:first-child)]:pl-6">
+                  <div className="font-['Cormorant_Garamond'] text-4xl font-light text-[#9C8660] mb-1">{n}</div>
+                  <div className="text-[9px] tracking-[0.28em] uppercase text-[#E8E4DC]/25">{l}</div>
                 </div>
               ))}
             </motion.div>

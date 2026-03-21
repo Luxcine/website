@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+import {
+  seatMap, bookingList, HARD_MAX,
+  generateRef, generateSlots, Booking
+} from '@/lib/saloneStore'
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 interface BookingPayload {
-  date: string        // '2026-04-21'
-  slot: string        // '10:00'
+  date: string
+  slot: string
   guests: number
   name: string
   email: string
@@ -15,27 +18,18 @@ interface BookingPayload {
   message?: string
 }
 
-// ─── In-memory store (replace with DB in production) ──────────────────────────
-// Structure: { 'YYYY-MM-DD_HH:MM': number_of_booked_seats }
-const bookings: Record<string, number> = {}
-
-const CAPACITY = 12
-const HARD_MAX = 15   // +3 overbooking tolerance
-
-// ─── POST /api/salone/book ────────────────────────────────────────────────────
+// POST /api/salone/book
 export async function POST(req: NextRequest) {
   try {
     const body: BookingPayload = await req.json()
     const { date, slot, guests, name, email } = body
 
-    // Validate required fields
     if (!date || !slot || !guests || !name || !email) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Check availability
     const key = `${date}_${slot}`
-    const currentBooked = bookings[key] ?? 0
+    const currentBooked = seatMap[key] ?? 0
 
     if (currentBooked + guests > HARD_MAX) {
       return NextResponse.json(
@@ -44,32 +38,42 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Reserve seats
-    bookings[key] = currentBooked + guests
+    seatMap[key] = currentBooked + guests
 
-    // TODO: In production replace with:
-    // 1. Save booking to database (Postgres / Supabase / Airtable)
-    // 2. Send confirmation email via Resend / SendGrid:
-    //    - Immediate confirmation to client (with date, time, location details)
-    //    - Reminder 24h before session
-    //    - Internal notification to LuxuryCine team
+    const ref = generateRef()
+    const booking: Booking = {
+      ref,
+      date,
+      slot,
+      guests,
+      name,
+      email,
+      phone: body.phone,
+      company: body.company,
+      role: body.role,
+      location: body.location,
+      stage: body.stage,
+      message: body.message,
+      createdAt: new Date().toISOString(),
+    }
+    bookingList.push(booking)
+
+    // TODO (production):
+    // 1. Save to DB (Postgres / Supabase / Airtable)
+    // 2. Send confirmation email via Resend / SendGrid
     // 3. Add to CRM / Asana task
-
-    const confirmationRef = generateRef()
 
     return NextResponse.json({
       success: true,
-      ref: confirmationRef,
+      ref,
       message: `Booking confirmed for ${guests} guest(s) on ${date} at ${slot}.`,
-      // In production: include ICS calendar attachment URL
     })
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-// ─── GET /api/salone/book?date=YYYY-MM-DD ─────────────────────────────────────
-// Returns available slots for a given date (without revealing exact capacity)
+// GET /api/salone/book?date=YYYY-MM-DD
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const date = searchParams.get('date')
@@ -79,30 +83,10 @@ export async function GET(req: NextRequest) {
   }
 
   const slots = generateSlots()
-  const availability = slots.map((slot) => {
-    const key = `${date}_${slot}`
-    const booked = bookings[key] ?? 0
-    return {
-      slot,
-      available: booked < HARD_MAX,
-      // NOTE: Do NOT expose booked count or remaining spots to frontend
-    }
-  })
+  const availability = slots.map((slot) => ({
+    slot,
+    available: (seatMap[`${date}_${slot}`] ?? 0) < HARD_MAX,
+  }))
 
   return NextResponse.json({ date, slots: availability })
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function generateSlots(): string[] {
-  const slots: string[] = []
-  for (let h = 10; h < 18; h++) {
-    slots.push(`${String(h).padStart(2, '0')}:00`)
-    slots.push(`${String(h).padStart(2, '0')}:30`)
-  }
-  return slots
-}
-
-function generateRef(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  return 'LXC-' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }

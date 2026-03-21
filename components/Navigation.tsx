@@ -17,102 +17,74 @@ export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const fn = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   return (
     <>
       <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          scrolled
-            ? 'bg-[#0D0D0D]/95 backdrop-blur-md border-b border-[#B8975A]/10'
-            : 'bg-transparent'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-700 ${
+          scrolled ? 'bg-[#080808]/90 backdrop-blur-md' : 'bg-transparent'
         }`}
       >
-        <div className="max-w-[1600px] mx-auto px-8 md:px-16 flex items-center justify-between h-20">
-          {/* Logo */}
-          <a href="/" className="flex-shrink-0">
-            <Image
-              src="/assets/logos/luxcine-white.svg"
-              alt="LuxuryCine"
-              width={140}
-              height={58}
-              priority
-            />
+        <div className="max-w-[1520px] mx-auto px-8 md:px-14 h-[72px] flex items-center justify-between">
+
+          <a href="/" className="flex-shrink-0 opacity-90 hover:opacity-100 transition-opacity duration-300">
+            <Image src="/assets/logos/luxcine-white.svg" alt="LuxuryCine" width={124} height={52} priority />
           </a>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-10">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-[11px] tracking-[0.25em] uppercase text-[#F5F0E8]/60 hover:text-[#B8975A] transition-colors duration-300 font-light"
-              >
-                {link.label}
+          {/* Centre nav — desktop */}
+          <nav className="hidden md:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
+            {navLinks.map((l) => (
+              <a key={l.href} href={l.href}
+                className="text-[10px] tracking-[0.28em] uppercase text-[#E8E4DC]/40 hover:text-[#E8E4DC]/80 transition-colors duration-500 font-normal">
+                {l.label}
               </a>
             ))}
           </nav>
 
-          {/* CTA + Mobile toggle */}
-          <div className="flex items-center gap-6">
-            <a
-              href="#contact"
-              className="hidden md:inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase border border-[#B8975A]/50 text-[#B8975A] px-6 py-2.5 hover:bg-[#B8975A] hover:text-[#0D0D0D] transition-all duration-300"
-            >
+          <div className="flex items-center gap-7">
+            <a href="#contact"
+              className="hidden md:block text-[10px] tracking-[0.22em] uppercase text-[#9C8660] hover:text-[#B09A72] transition-colors duration-300 font-normal">
               Begin a Project
             </a>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden flex flex-col gap-1.5 p-2"
-              aria-label="Toggle menu"
-            >
-              <span className={`block w-6 h-px bg-[#F5F0E8] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-              <span className={`block w-4 h-px bg-[#F5F0E8] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-              <span className={`block w-6 h-px bg-[#F5F0E8] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+            {/* Mobile hamburger */}
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-1.5" aria-label="Menu">
+              <span className={`block w-5 h-px bg-[#E8E4DC]/60 transition-all duration-400 ${menuOpen ? 'rotate-45 translate-y-[3px]' : 'mb-[5px]'}`} />
+              <span className={`block w-5 h-px bg-[#E8E4DC]/60 transition-all duration-400 ${menuOpen ? '-rotate-45' : ''}`} />
             </button>
           </div>
         </div>
+        {/* Bottom rule — only when scrolled */}
+        <div className={`h-px bg-[#E8E4DC]/5 transition-opacity duration-700 ${scrolled ? 'opacity-100' : 'opacity-0'}`} />
       </motion.header>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="fixed inset-0 z-40 bg-[#0D0D0D] flex flex-col items-center justify-center gap-10"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 bg-[#080808] flex flex-col items-start justify-end pb-20 px-10"
           >
-            {navLinks.map((link, i) => (
-              <motion.a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-                className="font-serif text-4xl text-[#F5F0E8] hover:text-[#B8975A] transition-colors duration-300"
-              >
-                {link.label}
-              </motion.a>
-            ))}
-            <motion.a
-              href="#contact"
-              onClick={() => setMenuOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="mt-6 text-[11px] tracking-[0.2em] uppercase border border-[#B8975A] text-[#B8975A] px-8 py-3"
-            >
+            <div className="space-y-6 mb-14">
+              {navLinks.map((l, i) => (
+                <motion.a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
+                  initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                  className="block font-['Cormorant_Garamond'] text-5xl font-light text-[#E8E4DC]/80 hover:text-[#E8E4DC] italic transition-colors duration-300">
+                  {l.label}
+                </motion.a>
+              ))}
+            </div>
+            <a href="#contact" onClick={() => setMenuOpen(false)}
+              className="text-[10px] tracking-[0.28em] uppercase text-[#9C8660]">
               Begin a Project
-            </motion.a>
+            </a>
           </motion.div>
         )}
       </AnimatePresence>

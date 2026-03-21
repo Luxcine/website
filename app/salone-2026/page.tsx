@@ -4,6 +4,7 @@ import SaloneExperience from '@/components/salone/SaloneExperience'
 import SaloneBooking from '@/components/salone/SaloneBooking'
 import SalonePractical from '@/components/salone/SalonePractical'
 import SaloneCTA from '@/components/salone/SaloneCTA'
+import SaloneAccess from '@/components/salone/SaloneAccess'
 import Navigation from '@/components/Navigation'
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default function SalonePage() {
         <SaloneHero />
         <SaloneExperience />
         <SaloneBooking />
+        <SaloneAccess />
         <SalonePractical />
         <SaloneCTA />
       </main>
