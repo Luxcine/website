@@ -28,14 +28,14 @@ export default function Navigation() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-700 ${
+        className={`fixed inset-x-0 top-[36px] z-50 transition-colors duration-700 ${
           scrolled ? 'bg-[#080808]/90 backdrop-blur-md' : 'bg-transparent'
         }`}
       >
         <div className="max-w-[1520px] mx-auto px-8 md:px-14 h-[72px] flex items-center justify-between">
 
           <a href="/" className="flex-shrink-0 opacity-90 hover:opacity-100 transition-opacity duration-300">
-            <Image src="/assets/logos/luxcine-white.svg" alt="LuxuryCine" width={164} height={68} priority />
+            <Image src="/assets/logos/luxcine-white.svg" alt="LuxuryCine" width={200} height={84} priority />
           </a>
 
           {/* Centre nav — desktop */}

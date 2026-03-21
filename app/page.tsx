@@ -14,6 +14,7 @@ import Footer from '@/components/Footer'
 export default function Home() {
   return (
     <>
+      <SaloneBanner />
       <Navigation />
       <main>
         <Hero />
@@ -23,7 +24,6 @@ export default function Home() {
         <ExperienceJourney />
         <TechPartners />
         <WhyLuxCine />
-        <SaloneBanner />
         <Contact />
         <FinalCTA />
       </main>

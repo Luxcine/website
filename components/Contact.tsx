@@ -69,8 +69,8 @@ export default function Contact() {
             >
               <div>
                 <div className="text-[9px] tracking-[0.3em] uppercase text-[#B8975A] mb-1">Email</div>
-                <a href="mailto:hello@luxurycine.com" className="text-[#F5F0E8]/60 hover:text-[#F5F0E8] transition-colors">
-                  hello@luxurycine.com
+                <a href="mailto:geral@luxurycine.com" className="text-[#F5F0E8]/60 hover:text-[#F5F0E8] transition-colors">
+                  geral@luxurycine.com
                 </a>
               </div>
               <div>
@@ -81,7 +81,8 @@ export default function Contact() {
               </div>
               <div>
                 <div className="text-[9px] tracking-[0.3em] uppercase text-[#B8975A] mb-1">Studios</div>
-                <p className="text-[#F5F0E8]/60">Algarve, Portugal — London, UK</p>
+                <p className="text-[#F5F0E8]/60">Quinta do Lago — Algarve, Portugal</p>
+                <p className="text-[#F5F0E8]/60">Lisboa, Portugal</p>
               </div>
             </motion.div>
           </div>

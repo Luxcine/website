@@ -21,7 +21,7 @@ export default function WhyLuxCine() {
 
       {/* Full-bleed cinematic image — B&O style */}
       <div className="relative h-[55vw] md:h-[70vh] max-h-[680px] overflow-hidden">
-        <Image src="/assets/images/space-sal-2.jpg" alt="The LuxuryCine Difference" fill quality={85}
+        <Image src="/assets/images/cinema-06.jpg" alt="The LuxuryCine Difference" fill quality={85}
           className="object-cover grayscale-[8%]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#080808]/70 via-[#080808]/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080808]" />

@@ -24,7 +24,7 @@ export default function BrandStatement() {
           {/* Left col — image */}
           <motion.div {...fade(0)} animate={inView ? { opacity: 1, y: 0 } : {}}
             className="md:col-span-5 relative aspect-[2/3] overflow-hidden">
-            <Image src="/assets/images/space-lt11-2.jpg" alt="Private Cinema" fill quality={85}
+            <Image src="/assets/images/cinema-01.jpg" alt="Private Cinema" fill quality={85}
               className="object-cover grayscale-[15%]" />
             {/* Architectural corner mark */}
             <div className="absolute top-0 left-0 w-8 h-px bg-[#9C8660]/50" />
