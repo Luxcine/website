@@ -15,6 +15,8 @@ export interface Booking {
   stage?: string
   message?: string
   createdAt: string
+  checkedIn?: boolean
+  checkedInAt?: string
 }
 
 // Seat occupancy: { 'YYYY-MM-DD_HH:MM': number }

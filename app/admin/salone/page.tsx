@@ -16,6 +16,8 @@ interface Booking {
   stage?: string
   message?: string
   createdAt: string
+  checkedIn?: boolean
+  checkedInAt?: string
 }
 
 interface AdminData {
@@ -169,7 +171,7 @@ export default function AdminSalone() {
           {[
             { label: 'Total Bookings', value: data?.totalBookings ?? 0 },
             { label: 'Total Guests', value: data?.totalGuests ?? 0 },
-            { label: 'Days Active', value: 6 },
+            { label: 'Checked In', value: data?.bookings.filter(b => b.checkedIn).length ?? 0 },
             { label: 'Avg Group Size', value: data && data.totalBookings > 0 ? Math.round((data.totalGuests / data.totalBookings) * 10) / 10 : '—' },
           ].map(s => (
             <div key={s.label} className="px-8 py-6">
@@ -269,7 +271,12 @@ export default function AdminSalone() {
                     <div className="col-span-2">
                       <span className="text-[10px] text-[#E8E4DC]/30">{b.location ?? '—'}</span>
                     </div>
-                    <div className="col-span-1 flex justify-end">
+                    <div className="col-span-1 flex flex-col items-end gap-2">
+                      {b.checkedIn ? (
+                        <span className="text-[8px] tracking-[0.15em] uppercase text-emerald-400/50">✓ In</span>
+                      ) : (
+                        <span className="text-[8px] tracking-[0.15em] uppercase text-[#E8E4DC]/15">—</span>
+                      )}
                       <button
                         onClick={() => cancelBooking(b.ref)}
                         disabled={cancelling === b.ref}

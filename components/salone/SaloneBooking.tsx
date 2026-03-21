@@ -66,6 +66,9 @@ export default function SaloneBooking() {
   const [step, setStep] = useState<Step>('date')
   const [booking, setBooking] = useState<Partial<BookingData>>({})
   const [submitted, setSubmitted] = useState(false)
+  const [bookingRef, setBookingRef] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const steps: Step[] = ['date', 'time', 'guests', 'details', 'confirm']
   const stepIndex = steps.indexOf(step)
@@ -74,11 +77,28 @@ export default function SaloneBooking() {
     setBooking((prev) => ({ ...prev, ...data }))
   }
 
-  function handleSubmit() {
-    // In production: POST to /api/salone/book with booking data
-    // Send confirmation email via backend (Resend / SendGrid / etc.)
-    console.log('Booking submitted:', booking)
-    setSubmitted(true)
+  async function handleSubmit() {
+    setSubmitting(true)
+    setSubmitError('')
+    try {
+      const res = await fetch('/api/salone/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(booking),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setSubmitError(data.error ?? 'Something went wrong. Please try again.')
+        setSubmitting(false)
+        return
+      }
+      setBookingRef(data.ref)
+      setSubmitted(true)
+    } catch {
+      setSubmitError('Network error. Please check your connection and try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -116,7 +136,7 @@ export default function SaloneBooking() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           {submitted ? (
-            <ConfirmationMessage booking={booking as BookingData} />
+            <ConfirmationMessage booking={booking as BookingData} bookingRef={bookingRef} />
           ) : (
             <>
               {/* Progress indicator */}
@@ -201,6 +221,8 @@ export default function SaloneBooking() {
                       booking={booking as BookingData}
                       onConfirm={handleSubmit}
                       onBack={() => setStep('details')}
+                      submitting={submitting}
+                      error={submitError}
                     />
                   </StepPanel>
                 )}
@@ -461,10 +483,14 @@ function StepConfirm({
   booking,
   onConfirm,
   onBack,
+  submitting,
+  error,
 }: {
   booking: BookingData
   onConfirm: () => void
   onBack: () => void
+  submitting?: boolean
+  error?: string
 }) {
   const dayLabel = EVENT_DAYS.find((d) => d.date === booking.date)?.label ?? booking.date
 
@@ -474,7 +500,6 @@ function StepConfirm({
       <h3 className="font-serif text-2xl text-[#F5F0E8] font-light mb-2">Review your booking</h3>
       <p className="text-[12px] text-[#F5F0E8]/40 mb-10">Please confirm your appointment details below.</p>
 
-      {/* Summary card */}
       <div className="border border-[#B8975A]/20 p-8 md:p-10 mb-10">
         <div className="grid md:grid-cols-2 gap-6">
           <SummaryField label="Date" value={dayLabel} />
@@ -496,39 +521,76 @@ function StepConfirm({
         We will also send a reminder 24 hours before your session.
       </p>
 
-      <PrimaryButton onClick={onConfirm}>
-        Confirm Appointment
+      {error && (
+        <p className="text-[12px] text-red-400/70 mb-6 border border-red-400/20 px-4 py-3">{error}</p>
+      )}
+
+      <PrimaryButton onClick={onConfirm} disabled={submitting}>
+        {submitting ? 'Confirming…' : 'Confirm Appointment'}
       </PrimaryButton>
     </div>
   )
 }
 
 // ─── Confirmation Message ─────────────────────────────────────────────────────
-function ConfirmationMessage({ booking }: { booking: BookingData }) {
+function ConfirmationMessage({ booking, bookingRef }: { booking: BookingData; bookingRef: string }) {
   const dayLabel = EVENT_DAYS.find((d) => d.date === booking.date)?.label ?? booking.date
+  const qrData = `https://www.luxurycine.com/checkin?ref=${bookingRef}`
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrData)}&color=9C8660&bgcolor=0D0D0D&margin=12&qzone=1`
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="py-16 text-center"
+      className="py-12"
     >
-      <div className="inline-flex items-center justify-center w-16 h-16 border border-[#B8975A] mb-10">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M4 10L8 14L16 6" stroke="#B8975A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </div>
-      <div className="font-serif text-4xl md:text-5xl text-[#F5F0E8] font-light mb-4">
-        Your session is reserved.
-      </div>
-      <p className="text-[14px] text-[#F5F0E8]/50 font-light mb-12 max-w-md mx-auto leading-relaxed">
-        We look forward to welcoming you on <span className="text-[#F5F0E8]/70">{dayLabel}</span> at{' '}
-        <span className="text-[#F5F0E8]/70">{booking.slot}</span>.
-        A confirmation has been sent to <span className="text-[#F5F0E8]/70">{booking.email}</span>.
-      </p>
-      <div className="border border-[#F5F0E8]/8 inline-block px-8 py-4">
-        <div className="text-[9px] tracking-[0.3em] uppercase text-[#B8975A] mb-1">Location</div>
-        <p className="text-[13px] text-[#F5F0E8]/50 font-light">Details will be included in your confirmation email.</p>
+      <div className="grid md:grid-cols-12 gap-10 items-start">
+        {/* Left — confirmation text */}
+        <div className="md:col-span-7">
+          <div className="inline-flex items-center justify-center w-12 h-12 border border-[#B8975A] mb-8">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8L6.5 11.5L13 5" stroke="#B8975A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <div className="font-serif text-3xl md:text-4xl text-[#F5F0E8] font-light mb-4 leading-tight">
+            Your session<br />is reserved.
+          </div>
+          <p className="text-[13px] text-[#F5F0E8]/45 font-light mb-8 leading-relaxed max-w-sm">
+            We look forward to welcoming you on <span className="text-[#F5F0E8]/70">{dayLabel}</span> at{' '}
+            <span className="text-[#F5F0E8]/70">{booking.slot}</span>.
+            A confirmation will be sent to <span className="text-[#F5F0E8]/70">{booking.email}</span>.
+          </p>
+
+          <div className="border border-[#F5F0E8]/8 px-6 py-5 space-y-1 inline-block">
+            <div className="text-[8px] tracking-[0.3em] uppercase text-[#B8975A]">Booking Reference</div>
+            <div className="font-mono text-lg text-[#F5F0E8]/80 tracking-[0.15em]">{bookingRef}</div>
+          </div>
+
+          <p className="mt-6 text-[11px] text-[#F5F0E8]/25 leading-relaxed max-w-xs">
+            Present this QR code or your reference at the entrance on the day.
+          </p>
+        </div>
+
+        {/* Right — QR code */}
+        <div className="md:col-span-4 md:col-start-9 flex flex-col items-center md:items-start gap-4">
+          <div className="text-[8px] tracking-[0.25em] uppercase text-[#F5F0E8]/20 mb-1">Your Entry Pass</div>
+          <div className="relative border border-[#B8975A]/20 p-3 bg-[#0D0D0D]">
+            {/* Corner marks */}
+            <div className="absolute top-0 left-0 w-4 h-px bg-[#B8975A]/50" />
+            <div className="absolute top-0 left-0 w-px h-4 bg-[#B8975A]/50" />
+            <div className="absolute top-0 right-0 w-4 h-px bg-[#B8975A]/50" />
+            <div className="absolute top-0 right-0 w-px h-4 bg-[#B8975A]/50" />
+            <div className="absolute bottom-0 left-0 w-4 h-px bg-[#B8975A]/50" />
+            <div className="absolute bottom-0 left-0 w-px h-4 bg-[#B8975A]/50" />
+            <div className="absolute bottom-0 right-0 w-4 h-px bg-[#B8975A]/50" />
+            <div className="absolute bottom-0 right-0 w-px h-4 bg-[#B8975A]/50" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={qrUrl} alt="Entry QR code" width={180} height={180} />
+          </div>
+          <p className="text-[9px] text-[#F5F0E8]/20 text-center md:text-left max-w-[180px] leading-relaxed">
+            Screenshot or save this page to keep your pass.
+          </p>
+        </div>
       </div>
     </motion.div>
   )
@@ -553,21 +615,26 @@ function PrimaryButton({
   children,
   onClick,
   type = 'button',
+  disabled,
 }: {
   children: React.ReactNode
   onClick?: () => void
   type?: 'button' | 'submit'
+  disabled?: boolean
 }) {
   return (
     <button
       type={type}
       onClick={onClick}
-      className="inline-flex items-center gap-3 bg-[#B8975A] text-[#0D0D0D] text-[11px] tracking-[0.2em] uppercase px-10 py-4 hover:bg-[#D4AF72] transition-colors duration-300 font-medium"
+      disabled={disabled}
+      className="inline-flex items-center gap-3 bg-[#B8975A] text-[#0D0D0D] text-[11px] tracking-[0.2em] uppercase px-10 py-4 hover:bg-[#D4AF72] transition-colors duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {children}
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+      {!disabled && (
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
     </button>
   )
 }
