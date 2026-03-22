@@ -5,9 +5,9 @@ import { useRef } from 'react'
 import Image from 'next/image'
 
 const spaces = [
-  { label: 'Private Cinema · Quinta do Lago', title: 'Villa Cinema', image: '/assets/images/cinema-02.jpg', desc: 'Reference-class projection, enveloping sound, bespoke seating — calibrated to perfection.' },
-  { label: 'Media Room · Lisboa', title: 'Urban Screening Room', image: '/assets/images/cinema-07.jpg', desc: 'Contemporary spaces that transition between daily living and cinematic immersion.' },
-  { label: 'Cinema Lounge · Algarve', title: 'The Private Lounge', image: '/assets/images/cinema-03.jpg', desc: 'Intimate settings with the precision of a professional screening room.' },
+  { label: 'Private Cinema · Quinta do Lago', title: 'Lote 11 — Quinta do Lago', image: '/assets/images/cinema-qdl-01.jpg', desc: 'Reference-class projection, enveloping sound, bespoke seating — calibrated to perfection.' },
+  { label: 'Private Cinema · Algarve', title: 'Lt. 23 — Private Villa', image: '/assets/images/cinema-lt23-01.jpg', desc: 'Intimate settings with the precision of a professional screening room.' },
+  { label: 'Cinema Lounge · Algarve', title: 'Villa Screening Room', image: '/assets/images/cinema-s07.jpg', desc: 'Where architecture and acoustics combine to create an extraordinary experience.' },
   { label: 'Signature Project · Palm Hills', title: 'The Palm Hills Estate', image: '/assets/images/space-palm.png', desc: 'Our most ambitious commissions — architecture and cinema conceived as one.' },
 ]
 

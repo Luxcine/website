@@ -8,7 +8,7 @@ export default function Hero() {
     <section className="relative h-screen min-h-[700px] flex flex-col justify-end overflow-hidden">
       {/* Image — minimal overlay, let it breathe */}
       <div className="absolute inset-0">
-        <Image src="/assets/images/hero.jpg" alt="LuxuryCine" fill priority quality={90}
+        <Image src="/assets/images/cinema-s01.jpg" alt="LuxuryCine" fill priority quality={90}
           className="object-cover object-center scale-[1.02]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/30 to-transparent" />
       </div>
