@@ -18,6 +18,7 @@ interface Booking {
   createdAt: string
   checkedIn?: boolean
   checkedInAt?: string
+  erpnextLead?: string
 }
 
 interface AdminData {
@@ -272,10 +273,16 @@ export default function AdminSalone() {
                       <span className="text-[10px] text-[#E8E4DC]/30">{b.location ?? '—'}</span>
                     </div>
                     <div className="col-span-1 flex flex-col items-end gap-2">
-                      {b.checkedIn ? (
+                      {b.checkedIn && (
                         <span className="text-[8px] tracking-[0.15em] uppercase text-emerald-400/50">✓ In</span>
+                      )}
+                      {b.erpnextLead ? (
+                        <a href={`https://ihome.l.erpnext.com/crm/leads/${b.erpnextLead}`} target="_blank" rel="noopener noreferrer"
+                          className="text-[8px] tracking-[0.1em] text-[#9C8660]/50 hover:text-[#9C8660] transition-colors duration-300" title="View in ERPNext">
+                          CRM ↗
+                        </a>
                       ) : (
-                        <span className="text-[8px] tracking-[0.15em] uppercase text-[#E8E4DC]/15">—</span>
+                        <span className="text-[8px] text-[#E8E4DC]/15">—</span>
                       )}
                       <button
                         onClick={() => cancelBooking(b.ref)}

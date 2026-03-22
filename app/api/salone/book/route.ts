@@ -3,6 +3,7 @@ import {
   seatMap, bookingList, HARD_MAX,
   generateRef, generateSlots, Booking
 } from '@/lib/saloneStore'
+import { createSaloneLead } from '@/lib/erpnext'
 
 interface BookingPayload {
   date: string
@@ -58,10 +59,26 @@ export async function POST(req: NextRequest) {
     }
     bookingList.push(booking)
 
-    // TODO (production):
-    // 1. Save to DB (Postgres / Supabase / Airtable)
-    // 2. Send confirmation email via Resend / SendGrid
-    // 3. Add to CRM / Asana task
+    // Create CRM Lead in ERPNext (non-blocking — booking succeeds even if CRM fails)
+    createSaloneLead({
+      ref,
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      company: body.company,
+      role: body.role,
+      location: body.location,
+      stage: body.stage,
+      date,
+      slot,
+      guests,
+      message: body.message,
+    }).then(leadName => {
+      booking.erpnextLead = leadName
+      console.log(`[CRM] Lead created: ${leadName} for booking ${ref}`)
+    }).catch(err => {
+      console.error(`[CRM] Lead creation failed for ${ref}:`, err.message)
+    })
 
     return NextResponse.json({
       success: true,

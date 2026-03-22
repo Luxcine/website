@@ -17,6 +17,7 @@ export interface Booking {
   createdAt: string
   checkedIn?: boolean
   checkedInAt?: string
+  erpnextLead?: string
 }
 
 // Seat occupancy: { 'YYYY-MM-DD_HH:MM': number }
