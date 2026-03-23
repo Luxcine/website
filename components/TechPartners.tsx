@@ -12,8 +12,8 @@ const partners = [
   { name: 'Steinway Lyngdorf', cat: 'High-End Audio' },
   { name: 'Datasat', cat: 'Digital Cinema' },
   { name: 'Screen Research', cat: 'Screens' },
-  { name: 'Severtson', cat: 'Projection Screens' },
-  { name: 'Crestron', cat: 'Control Systems' },
+  { name: 'Stewart Filmscreen', cat: 'Projection Screens' },
+  { name: 'Control4', cat: 'Control Systems' },
 ]
 
 export default function TechPartners() {
@@ -33,7 +33,7 @@ export default function TechPartners() {
           </motion.h2>
           <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-[13px] text-[#E8E4DC]/40 leading-loose font-light max-w-xs self-end">
+            className="text-[15px] text-[#E8E4DC]/65 leading-loose font-light max-w-xs self-end">
             Equipment chosen by merit, not margin. We specify what the space demands.
           </motion.p>
         </div>
@@ -45,7 +45,7 @@ export default function TechPartners() {
               initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.7, delay: i * 0.05 + 0.4 }}
               className="group px-7 py-9 hover:bg-[#141414] transition-colors duration-500">
-              <div className="font-['Cormorant_Garamond'] text-lg text-[#E8E4DC]/30 group-hover:text-[#E8E4DC]/70 transition-colors duration-500 font-light tracking-wide mb-1.5">
+              <div className="font-['Cormorant_Garamond'] text-lg text-[#E8E4DC]/60 group-hover:text-[#E8E4DC]/90 transition-colors duration-500 font-light tracking-wide mb-1.5">
                 {p.name}
               </div>
               <div className="text-[9px] tracking-[0.2em] uppercase text-[#9C8660]/30 group-hover:text-[#9C8660]/60 transition-colors duration-500">

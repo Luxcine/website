@@ -53,7 +53,7 @@ export default function FinalCTA() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-[15px] font-light text-[#F5F0E8]/50 leading-relaxed max-w-lg mx-auto mb-14"
+          className="text-[15px] font-light text-[#F5F0E8]/70 leading-relaxed max-w-lg mx-auto mb-14"
         >
           A private conversation. No obligation.
           Simply the beginning of something exceptional.
@@ -75,10 +75,10 @@ export default function FinalCTA() {
             </svg>
           </a>
           <a
-            href="mailto:hello@luxurycine.com"
-            className="inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-[#F5F0E8]/50 hover:text-[#F5F0E8] transition-colors duration-300 px-4 py-5"
+            href="mailto:geral@luxurycine.com"
+            className="inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-[#F5F0E8]/65 hover:text-[#F5F0E8] transition-colors duration-300 px-4 py-5"
           >
-            hello@luxurycine.com
+            geral@luxurycine.com
           </a>
         </motion.div>
       </div>

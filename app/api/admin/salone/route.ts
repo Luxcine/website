@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { bookingList, seatMap, CAPACITY, HARD_MAX, generateSlots } from '@/lib/saloneStore'
+import { getStore, cancelBooking, purgeCancelled, CAPACITY, HARD_MAX, generateSlots } from '@/lib/saloneStore'
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN ?? 'luxcine-admin-2026'
 
@@ -14,13 +14,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const store = await getStore()
   const eventDays = ['2026-04-21', '2026-04-22', '2026-04-23', '2026-04-24', '2026-04-25', '2026-04-26']
   const slots = generateSlots()
 
   const dayStats = eventDays.map(date => {
     let totalSeats = 0
     const slotData = slots.map(slot => {
-      const booked = seatMap[`${date}_${slot}`] ?? 0
+      const booked = store.seatMap[`${date}_${slot}`] ?? 0
       totalSeats += booked
       return { slot, booked, capacity: CAPACITY, hardMax: HARD_MAX }
     })
@@ -28,17 +29,23 @@ export async function GET(req: NextRequest) {
   })
 
   return NextResponse.json({
-    totalBookings: bookingList.length,
-    totalGuests: bookingList.reduce((s, b) => s + b.guests, 0),
-    bookings: bookingList.sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+    totalBookings: store.bookings.length,
+    totalGuests: store.bookings.reduce((s, b) => s + b.guests, 0),
+    bookings: store.bookings.sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
     dayStats,
   })
 }
 
 // DELETE /api/admin/salone?ref=LXC-XXXXXX — cancel a booking
+// DELETE /api/admin/salone?purge=1 — permanently remove all cancelled bookings
 export async function DELETE(req: NextRequest) {
   if (!auth(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  if (req.nextUrl.searchParams.get('purge') === '1') {
+    const removed = await purgeCancelled()
+    return NextResponse.json({ success: true, removed })
   }
 
   const ref = req.nextUrl.searchParams.get('ref')
@@ -46,14 +53,10 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'ref required' }, { status: 400 })
   }
 
-  const idx = bookingList.findIndex(b => b.ref === ref)
-  if (idx === -1) {
+  const booking = await cancelBooking(ref)
+  if (!booking) {
     return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
   }
 
-  const [removed] = bookingList.splice(idx, 1)
-  const key = `${removed.date}_${removed.slot}`
-  seatMap[key] = Math.max(0, (seatMap[key] ?? 0) - removed.guests)
-
-  return NextResponse.json({ success: true, cancelled: removed.ref })
+  return NextResponse.json({ success: true, cancelled: booking.ref })
 }

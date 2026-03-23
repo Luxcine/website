@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { bookingList } from '@/lib/saloneStore'
+import { getBookingByRef, updateBooking } from '@/lib/saloneStore'
 
 const CHECKIN_TOKEN = process.env.CHECKIN_TOKEN ?? process.env.ADMIN_TOKEN ?? 'luxcine-admin-2026'
 
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const ref = req.nextUrl.searchParams.get('ref')?.toUpperCase().trim()
   if (!ref) return NextResponse.json({ error: 'ref required' }, { status: 400 })
 
-  const booking = bookingList.find(b => b.ref === ref)
+  const booking = await getBookingByRef(ref)
   if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
 
   return NextResponse.json(booking)
@@ -29,15 +29,22 @@ export async function POST(req: NextRequest) {
   const refClean = ref?.toUpperCase().trim()
   if (!refClean) return NextResponse.json({ error: 'ref required' }, { status: 400 })
 
-  const booking = bookingList.find(b => b.ref === refClean)
+  const booking = await getBookingByRef(refClean)
   if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
+
+  if (booking.cancelled) {
+    return NextResponse.json({ error: 'Booking has been cancelled' }, { status: 410 })
+  }
 
   if (booking.checkedIn) {
     return NextResponse.json({ alreadyCheckedIn: true, booking }, { status: 200 })
   }
 
-  booking.checkedIn = true
-  booking.checkedInAt = new Date().toISOString()
+  await updateBooking(refClean, {
+    checkedIn: true,
+    checkedInAt: new Date().toISOString(),
+  })
 
-  return NextResponse.json({ success: true, booking })
+  const updated = await getBookingByRef(refClean)
+  return NextResponse.json({ success: true, booking: updated })
 }

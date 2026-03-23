@@ -32,7 +32,7 @@ export default function Pillars() {
           <motion.p
             initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 1.2, delay: 0.2 }}
-            className="text-[13px] text-[#E8E4DC]/40 leading-loose self-end max-w-sm font-light">
+            className="text-[15px] text-[#E8E4DC]/65 leading-loose self-end max-w-sm font-light">
             Every decision we make is guided by a single measure: does this serve the experience? Not the specification. The experience.
           </motion.p>
         </div>
@@ -58,7 +58,7 @@ export default function Pillars() {
               </div>
 
               {/* Body */}
-              <p className="md:col-span-6 text-[13px] text-[#E8E4DC]/35 leading-loose font-light group-hover:text-[#E8E4DC]/55 transition-colors duration-500">
+              <p className="md:col-span-6 text-[15px] text-[#E8E4DC]/65 leading-loose font-light group-hover:text-[#E8E4DC]/80 transition-colors duration-500">
                 {p.body}
               </p>
 

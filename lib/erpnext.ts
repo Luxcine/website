@@ -1,4 +1,4 @@
-// ERPNext CRM integration — creates a Lead for each confirmed Salone booking
+// Frappe CRM integration — creates a CRM Lead for each confirmed Salone booking
 // Uses session-based auth (API key encryption is broken on this instance)
 
 const ERPNEXT_URL = process.env.ERPNEXT_URL ?? 'https://ihome.l.erpnext.com'
@@ -26,7 +26,7 @@ interface ErpNextSession {
 }
 
 async function getSession(): Promise<ErpNextSession> {
-  // Step 1: login
+  // Login — Frappe sets csrf_token in both cookie and response body
   const loginRes = await fetch(`${ERPNEXT_URL}/api/method/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -35,12 +35,11 @@ async function getSession(): Promise<ErpNextSession> {
 
   if (!loginRes.ok) throw new Error(`ERPNext login failed: ${loginRes.status}`)
 
-  const cookie = loginRes.headers.get('set-cookie') ?? ''
+  const setCookie = loginRes.headers.get('set-cookie') ?? ''
+  const cookie = setCookie
 
-  // Step 2: get CSRF token from homepage HTML
-  const homeRes = await fetch(ERPNEXT_URL, {
-    headers: { Cookie: cookie },
-  })
+  // Frappe sets csrf_token in the homepage HTML (not in login cookies)
+  const homeRes = await fetch(ERPNEXT_URL, { headers: { Cookie: cookie } })
   const html = await homeRes.text()
   const csrfMatch = html.match(/csrf_token\s*=\s*"([^"]+)"/)
   const csrf = csrfMatch?.[1] ?? ''
@@ -53,41 +52,39 @@ async function getSession(): Promise<ErpNextSession> {
 export async function createSaloneLead(data: SaloneLeadData): Promise<string> {
   const session = await getSession()
 
-  // Split name into first/last for ERPNext Lead
+  // Split name into first/last for Frappe CRM Lead
   const nameParts = data.name.trim().split(' ')
   const firstName = nameParts[0]
-  const lastName = nameParts.slice(1).join(' ') || '-'
+  const lastName = nameParts.slice(1).join(' ') || ''
+
+  const noteText = [
+    `Salone del Mobile 2026 Booking`,
+    `Ref: ${data.ref}`,
+    `Date: ${data.date} at ${data.slot}`,
+    `Guests: ${data.guests}`,
+    data.role ? `Role: ${data.role}` : '',
+    data.location ? `Location: ${data.location}` : '',
+    data.stage ? `Project Stage: ${data.stage}` : '',
+    data.message ? `\nMessage: ${data.message}` : '',
+  ].filter(Boolean).join('\n')
 
   const doc = {
-    doctype: 'Lead',
+    doctype: 'CRM Lead',
     first_name: firstName,
     last_name: lastName,
-    lead_name: data.name,
-    email_id: data.email,
+    email: data.email,
     mobile_no: data.phone ?? '',
-    company_name: data.company ?? '',
-    status: 'Open',
-    lead_source: 'Exhibition',
-    country: 'Portugal',
-    // Custom fields
-    custom_brand: 'LuxuryCine',
-    custom_booking_ref: data.ref,
-    custom_salone_date: data.date,
-    custom_salone_slot: data.slot,
-    custom_salone_guests: data.guests,
-    custom_project_stage: data.stage ?? '',
+    organization: data.company ?? '',
+    job_title: data.role ?? '',
+    source: 'Exhibition',
+    status: 'New',
+    lead_owner: ERPNEXT_USR,
+    // Booking info packed into website field as reference (no custom fields yet)
+    website: `Salone 2026 | Ref: ${data.ref} | ${data.date} ${data.slot} | ${data.guests} guests`,
     notes: [
       {
-        note: [
-          `Salone del Mobile 2026 Booking`,
-          `Ref: ${data.ref}`,
-          `Date: ${data.date} at ${data.slot}`,
-          `Guests: ${data.guests}`,
-          data.role ? `Role: ${data.role}` : '',
-          data.location ? `Location: ${data.location}` : '',
-          data.stage ? `Project Stage: ${data.stage}` : '',
-          data.message ? `\nMessage: ${data.message}` : '',
-        ].filter(Boolean).join('\n'),
+        doctype: 'CRM Note',
+        note: noteText,
       },
     ],
   }

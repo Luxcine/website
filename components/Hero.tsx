@@ -38,7 +38,7 @@ export default function Hero() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.9 }}
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-          <p className="text-[13px] text-[#E8E4DC]/45 font-light leading-loose max-w-sm">
+          <p className="text-[15px] text-[#E8E4DC]/70 font-light leading-loose max-w-sm">
             We design and engineer bespoke private cinema spaces
             for those who understand the finest experiences are built — not bought.
           </p>

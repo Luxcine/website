@@ -15,6 +15,8 @@ interface Booking {
   location?: string
   checkedIn?: boolean
   checkedInAt?: string
+  cancelled?: boolean
+  cancelledAt?: string
 }
 
 const DAY_LABELS: Record<string, string> = {
@@ -26,7 +28,7 @@ const DAY_LABELS: Record<string, string> = {
   '2026-04-26': 'Sun 26 Apr',
 }
 
-type Status = 'idle' | 'scanning' | 'found' | 'already' | 'checked' | 'notfound' | 'error'
+type Status = 'idle' | 'scanning' | 'found' | 'already' | 'checked' | 'notfound' | 'cancelled' | 'error'
 
 export default function CheckIn() {
   const [token, setToken] = useState('')
@@ -116,6 +118,7 @@ export default function CheckIn() {
       if (!res.ok) { setStatus('error'); return }
       const data = await res.json()
       setBooking(data)
+      if (data.cancelled) { setStatus('cancelled'); return }
       setStatus(data.checkedIn ? 'already' : 'found')
     } catch {
       setStatus('error')
@@ -162,7 +165,7 @@ export default function CheckIn() {
         <div className="w-full max-w-xs">
           <div className="mb-10 text-center">
             <div className="font-['Cormorant_Garamond'] text-[1.1rem] tracking-[0.18em] uppercase text-[#E8E4DC]/80 mb-1">
-              LuxuryCine
+              LuxCine
             </div>
             <p className="text-[9px] tracking-[0.3em] uppercase text-[#9C8660]">
               Guest Check-In · Salone 2026
@@ -194,7 +197,7 @@ export default function CheckIn() {
       <div className="border-b border-[#E8E4DC]/6 px-6 py-4 flex items-center justify-between">
         <div>
           <span className="font-['Cormorant_Garamond'] text-[0.95rem] tracking-[0.15em] uppercase text-[#E8E4DC]/60 mr-3">
-            LuxuryCine
+            LuxCine
           </span>
           <span className="text-[9px] tracking-[0.25em] uppercase text-[#9C8660]">Check-In</span>
         </div>
@@ -359,6 +362,22 @@ export default function CheckIn() {
               <div className="font-['Cormorant_Garamond'] text-4xl text-red-400/50 mb-4">—</div>
               <p className="text-[13px] text-[#E8E4DC]/40">Booking not found</p>
               <p className="text-[11px] text-[#E8E4DC]/20 mt-1">Check the reference and try again</p>
+            </div>
+            <button onClick={reset}
+              className="w-full border border-[#E8E4DC]/10 py-3 text-[10px] tracking-[0.2em] uppercase text-[#E8E4DC]/30 hover:text-[#E8E4DC]/60 transition-colors duration-300">
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* ── CANCELLED ── */}
+        {status === 'cancelled' && booking && (
+          <div className="w-full text-center space-y-6">
+            <div className="border border-red-400/20 p-10">
+              <div className="font-['Cormorant_Garamond'] text-4xl text-red-400/50 mb-4">✕</div>
+              <p className="text-[13px] text-[#E8E4DC]/40">Booking cancelled</p>
+              <p className="text-[11px] text-[#E8E4DC]/20 mt-1">{booking.name}</p>
+              <p className="text-[10px] text-[#E8E4DC]/15 mt-0.5">{booking.ref}</p>
             </div>
             <button onClick={reset}
               className="w-full border border-[#E8E4DC]/10 py-3 text-[10px] tracking-[0.2em] uppercase text-[#E8E4DC]/30 hover:text-[#E8E4DC]/60 transition-colors duration-300">

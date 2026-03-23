@@ -78,7 +78,7 @@ export default function ExperienceJourney() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-[15px] font-light text-[#F5F0E8]/50 leading-relaxed"
+            className="text-[15px] font-light text-[#F5F0E8]/70 leading-relaxed"
           >
             Our process is that of an architectural atelier — methodical, considered,
             and guided by a single purpose: to deliver the exceptional.
@@ -116,7 +116,7 @@ export default function ExperienceJourney() {
                   <div className="text-[10px] tracking-[0.2em] uppercase text-[#B8975A] mb-4">
                     {step.subtitle}
                   </div>
-                  <p className="text-[13px] text-[#F5F0E8]/50 leading-relaxed font-light max-w-sm">
+                  <p className="text-[15px] text-[#F5F0E8]/70 leading-relaxed font-light max-w-sm">
                     {step.description}
                   </p>
                 </div>

@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 const EVENT_DAYS = [
-  { date: '2026-04-21', label: 'Mon 21 Apr' },
+  { date: '2026-04-21', label: 'Tue 21 Apr' },
   { date: '2026-04-22', label: 'Tue 22 Apr' },
   { date: '2026-04-23', label: 'Wed 23 Apr' },
   { date: '2026-04-24', label: 'Thu 24 Apr' },
@@ -13,12 +13,18 @@ const EVENT_DAYS = [
   { date: '2026-04-26', label: 'Sat 26 Apr' },
 ]
 
-// Slots every 30 min, 10:00–18:00 (last slot 17:30)
+// Slots every 40 min starting 09:50
 function generateSlots(): string[] {
   const slots: string[] = []
-  for (let h = 10; h < 18; h++) {
-    slots.push(`${String(h).padStart(2, '0')}:00`)
-    slots.push(`${String(h).padStart(2, '0')}:30`)
+  let minutes = 9 * 60 + 50 // 09:50
+  const end = 18 * 60 + 30  // stop before 18:30
+  while (minutes < end) {
+    const h = Math.floor(minutes / 60)
+    const m = minutes % 60
+    if (!(h === 13 && m === 50)) {
+      slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`)
+    }
+    minutes += 40
   }
   return slots
 }
@@ -536,7 +542,7 @@ function StepConfirm({
 function ConfirmationMessage({ booking, bookingRef }: { booking: BookingData; bookingRef: string }) {
   const dayLabel = EVENT_DAYS.find((d) => d.date === booking.date)?.label ?? booking.date
   const qrData = `https://www.luxurycine.com/checkin?ref=${bookingRef}`
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrData)}&color=9C8660&bgcolor=0D0D0D&margin=12&qzone=1`
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(qrData)}&color=9C8660&bgcolor=0D0D0D&margin=14&qzone=1`
 
   return (
     <motion.div
@@ -585,11 +591,34 @@ function ConfirmationMessage({ booking, bookingRef }: { booking: BookingData; bo
             <div className="absolute bottom-0 right-0 w-4 h-px bg-[#B8975A]/50" />
             <div className="absolute bottom-0 right-0 w-px h-4 bg-[#B8975A]/50" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={qrUrl} alt="Entry QR code" width={180} height={180} />
+            <img src={qrUrl} alt="Entry QR code" width={280} height={280} />
           </div>
-          <p className="text-[9px] text-[#F5F0E8]/20 text-center md:text-left max-w-[180px] leading-relaxed">
-            Screenshot or save this page to keep your pass.
-          </p>
+          {/* Wallet buttons */}
+          <div className="flex flex-col gap-2 w-full mt-2">
+            <a
+              href={`/api/wallet/apple?ref=${bookingRef}`}
+              className="flex items-center justify-center gap-2.5 bg-black border border-white/15 hover:border-white/35 px-5 py-3 text-white text-[11px] tracking-[0.12em] transition-colors duration-300"
+            >
+              {/* Apple logo */}
+              <svg width="14" height="17" viewBox="0 0 14 17" fill="currentColor" className="opacity-90 shrink-0">
+                <path d="M11.56 9.01c.02-1.96 1.6-2.91 1.67-2.96-0.91-1.33-2.33-1.51-2.83-1.53-1.2-.12-2.35.71-2.96.71-.61 0-1.55-.69-2.55-.67-1.31.02-2.52.77-3.2 1.95-1.37 2.37-.35 5.89 0.98 7.82.65.94 1.43 2 2.45 1.96.98-.04 1.35-.63 2.54-.63 1.19 0 1.52.63 2.56.61 1.06-.02 1.72-.96 2.37-1.9.75-1.08 1.05-2.13 1.07-2.19-.02-.01-2.05-.79-2.1-3.17zM9.57 3.07C10.1 2.44 10.46 1.56 10.36.65c-.77.04-1.71.52-2.26 1.14-.5.56-.93 1.46-.81 2.32.85.07 1.73-.43 2.28-1.04z"/>
+              </svg>
+              Add to Apple Wallet
+            </a>
+            <a
+              href={`/api/wallet/google?ref=${bookingRef}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2.5 bg-[#1a73e8] hover:bg-[#1558c9] px-5 py-3 text-white text-[11px] tracking-[0.12em] transition-colors duration-300"
+            >
+              {/* Google Wallet icon */}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" fill="white" opacity=".9"/>
+                <path d="M12 9.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z" fill="white"/>
+              </svg>
+              Add to Google Wallet
+            </a>
+          </div>
         </div>
       </div>
     </motion.div>

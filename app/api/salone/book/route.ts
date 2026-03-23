@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import {
-  seatMap, bookingList, HARD_MAX,
-  generateRef, generateSlots, Booking
-} from '@/lib/saloneStore'
+import { getStore, addBooking, updateBooking, HARD_MAX, generateRef, generateSlots, Booking } from '@/lib/saloneStore'
 import { createSaloneLead } from '@/lib/erpnext'
+import { sendBookingConfirmation } from '@/lib/email'
 
 interface BookingPayload {
   date: string
@@ -29,8 +27,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    const store = await getStore()
     const key = `${date}_${slot}`
-    const currentBooked = seatMap[key] ?? 0
+    const currentBooked = store.seatMap[key] ?? 0
 
     if (currentBooked + guests > HARD_MAX) {
       return NextResponse.json(
@@ -38,8 +37,6 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       )
     }
-
-    seatMap[key] = currentBooked + guests
 
     const ref = generateRef()
     const booking: Booking = {
@@ -57,35 +54,48 @@ export async function POST(req: NextRequest) {
       message: body.message,
       createdAt: new Date().toISOString(),
     }
-    bookingList.push(booking)
 
-    // Create CRM Lead in ERPNext (non-blocking — booking succeeds even if CRM fails)
-    createSaloneLead({
+    await addBooking(booking)
+
+    // Send confirmation email (fire-and-forget — don't block response)
+    sendBookingConfirmation({
       ref,
       name: body.name,
       email: body.email,
-      phone: body.phone,
-      company: body.company,
-      role: body.role,
-      location: body.location,
-      stage: body.stage,
       date,
       slot,
       guests,
-      message: body.message,
-    }).then(leadName => {
-      booking.erpnextLead = leadName
+    }).catch(err => console.error('[email] Confirmation failed for', ref, ':', (err as Error).message))
+
+    // Create CRM Lead in ERPNext (awaited — Vercel kills background tasks before completion)
+    try {
+      const leadName = await createSaloneLead({
+        ref,
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        company: body.company,
+        role: body.role,
+        location: body.location,
+        stage: body.stage,
+        date,
+        slot,
+        guests,
+        message: body.message,
+      })
+      await updateBooking(ref, { erpnextLead: leadName })
       console.log(`[CRM] Lead created: ${leadName} for booking ${ref}`)
-    }).catch(err => {
-      console.error(`[CRM] Lead creation failed for ${ref}:`, err.message)
-    })
+    } catch (err: unknown) {
+      console.error(`[CRM] Lead creation failed for ${ref}:`, (err as Error).message)
+    }
 
     return NextResponse.json({
       success: true,
       ref,
       message: `Booking confirmed for ${guests} guest(s) on ${date} at ${slot}.`,
     })
-  } catch {
+  } catch (err) {
+    console.error('[book] error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -99,10 +109,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'date parameter required' }, { status: 400 })
   }
 
+  const store = await getStore()
   const slots = generateSlots()
   const availability = slots.map((slot) => ({
     slot,
-    available: (seatMap[`${date}_${slot}`] ?? 0) < HARD_MAX,
+    available: (store.seatMap[`${date}_${slot}`] ?? 0) < HARD_MAX,
   }))
 
   return NextResponse.json({ date, slots: availability })

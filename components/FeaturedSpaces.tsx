@@ -5,10 +5,10 @@ import { useRef } from 'react'
 import Image from 'next/image'
 
 const spaces = [
-  { label: 'Private Cinema · Quinta do Lago', title: 'Lote 11 — Quinta do Lago', image: '/assets/images/cinema-qdl-01.jpg', desc: 'Reference-class projection, enveloping sound, bespoke seating — calibrated to perfection.' },
-  { label: 'Private Cinema · Algarve', title: 'Lt. 23 — Private Villa', image: '/assets/images/cinema-lt23-01.jpg', desc: 'Intimate settings with the precision of a professional screening room.' },
-  { label: 'Cinema Lounge · Algarve', title: 'Villa Screening Room', image: '/assets/images/cinema-s07.jpg', desc: 'Where architecture and acoustics combine to create an extraordinary experience.' },
-  { label: 'Signature Project · Palm Hills', title: 'The Palm Hills Estate', image: '/assets/images/space-palm.png', desc: 'Our most ambitious commissions — architecture and cinema conceived as one.' },
+  { label: 'Private Cinema · Project I', title: 'Private Residence', image: '/assets/images/cinema-qdl-01.jpg', desc: 'Reference-class projection, enveloping sound, bespoke seating — calibrated to perfection.' },
+  { label: 'Private Cinema · Project II', title: 'Private Villa', image: '/assets/images/cinema-lt23-01.jpg', desc: 'Intimate settings with the precision of a professional screening room.' },
+  { label: 'Cinema Lounge · Project III', title: 'Villa Screening Room', image: '/assets/images/cinema-s07.jpg', desc: 'Where architecture and acoustics combine to create an extraordinary experience.' },
+  { label: 'Signature Cinema · Project IV', title: 'Private Estate', image: '/assets/images/space-palm.png', desc: 'Our most ambitious work — architecture and cinema conceived as one.' },
 ]
 
 export default function FeaturedSpaces() {
