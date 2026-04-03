@@ -1,4 +1,4 @@
-// Frappe CRM integration — creates a CRM Lead for each confirmed Salone booking
+// ERPNext native Lead integration — creates a Lead for each confirmed Salone booking
 // Uses session-based auth (API key encryption is broken on this instance)
 
 const ERPNEXT_URL = process.env.ERPNEXT_URL ?? 'https://ihome.l.erpnext.com'
@@ -52,7 +52,7 @@ async function getSession(): Promise<ErpNextSession> {
 export async function createSaloneLead(data: SaloneLeadData): Promise<string> {
   const session = await getSession()
 
-  // Split name into first/last for Frappe CRM Lead
+  // Split name into first/last for native Lead
   const nameParts = data.name.trim().split(' ')
   const firstName = nameParts[0]
   const lastName = nameParts.slice(1).join(' ') || ''
@@ -69,18 +69,22 @@ export async function createSaloneLead(data: SaloneLeadData): Promise<string> {
   ].filter(Boolean).join('\n')
 
   const doc = {
-    doctype: 'CRM Lead',
+    doctype: 'Lead',
     first_name: firstName,
     last_name: lastName,
-    email: data.email,
+    lead_name: data.name.trim(),
+    email_id: data.email,
     mobile_no: data.phone ?? '',
-    organization: data.company ?? '',
+    company_name: data.company ?? '',
     job_title: data.role ?? '',
     source: 'Exhibition',
-    status: 'New',
+    status: 'Lead',
     lead_owner: ERPNEXT_USR,
-    // Booking info packed into website field as reference (no custom fields yet)
     website: `Salone 2026 | Ref: ${data.ref} | ${data.date} ${data.slot} | ${data.guests} guests`,
+    custom_booking_ref: data.ref,
+    custom_salone_date: data.date,
+    custom_salone_slot: data.slot,
+    custom_salone_guests: data.guests,
     notes: [
       {
         doctype: 'CRM Note',

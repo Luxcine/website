@@ -302,7 +302,7 @@ export default function AdminSalone() {
                         <span className="text-[11px] tracking-[0.1em] uppercase text-emerald-400/80">✓ In</span>
                       )}
                       {b.erpnextLead ? (
-                        <a href={`https://ihome.l.erpnext.com/crm/leads/${b.erpnextLead}`} target="_blank" rel="noopener noreferrer"
+                        <a href={`https://ihome.l.erpnext.com/app/lead/${b.erpnextLead}`} target="_blank" rel="noopener noreferrer"
                           className="text-[11px] tracking-[0.1em] text-[#9C8660]/70 hover:text-[#9C8660] transition-colors duration-300" title="View in ERPNext">
                           CRM ↗
                         </a>
