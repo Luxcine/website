@@ -4,8 +4,16 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import Image from 'next/image'
 
-const spaces = [
-  { label: 'Private Cinema · Project I', title: 'Private Residence', image: '/assets/images/cinema-qdl-01.jpg', desc: 'Reference-class projection, enveloping sound, bespoke seating — calibrated to perfection.' },
+type Space = {
+  label: string
+  title: string
+  image: string
+  desc: string
+  video?: string
+}
+
+const spaces: Space[] = [
+  { label: 'Signature Cinema · Cine5', title: 'Cine5', image: '/assets/images/cine5.png', video: '/assets/video/cine5-hand.mp4', desc: 'Reference-class projection, enveloping sound, bespoke seating — calibrated to perfection.' },
   { label: 'Private Cinema · Project II', title: 'Private Villa', image: '/assets/images/cinema-lt23-01.jpg', desc: 'Intimate settings with the precision of a professional screening room.' },
   { label: 'Cinema Lounge · Project III', title: 'Villa Screening Room', image: '/assets/images/cinema-s07.jpg', desc: 'Where architecture and acoustics combine to create an extraordinary experience.' },
   { label: 'Signature Cinema · Project IV', title: 'Private Estate', image: '/assets/images/space-palm.png', desc: 'Our most ambitious work — architecture and cinema conceived as one.' },
@@ -58,14 +66,27 @@ export default function FeaturedSpaces() {
   )
 }
 
-function SpaceCard({ space, i, inView, cn }: { space: typeof spaces[0]; i: number; inView: boolean; cn: string }) {
+function SpaceCard({ space, i, inView, cn }: { space: Space; i: number; inView: boolean; cn: string }) {
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: 1, delay: i * 0.1 + 0.2 }}
       className={`group relative overflow-hidden bg-[#141414] ${cn}`}>
-      <Image src={space.image} alt={space.title} fill quality={80}
-        className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]" />
+      {space.video ? (
+        <video
+          src={space.video}
+          poster={space.image}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+        />
+      ) : (
+        <Image src={space.image} alt={space.title} fill quality={80}
+          className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]" />
+      )}
       {/* Subtle gradient — less heavy than before */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#080808]/85 via-transparent to-transparent" />
 

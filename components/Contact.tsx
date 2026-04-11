@@ -84,6 +84,18 @@ export default function Contact() {
                 <p className="text-[#F5F0E8]/70">Quinta do Lago — Algarve, Portugal</p>
                 <p className="text-[#F5F0E8]/70">Lisboa, Portugal</p>
               </div>
+              <div>
+                <div className="text-[10px] tracking-[0.26em] uppercase text-[#C9AE84] mb-1.5">Brochure</div>
+                <a
+                  href="/brochure"
+                  className="inline-flex items-center gap-2 text-[#F5F0E8]/70 hover:text-[#B8975A] transition-colors group"
+                >
+                  Download LuxuryCine brochure (PDF)
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" className="transition-transform group-hover:translate-y-0.5">
+                    <path d="M8 2V11M8 11L4 7M8 11L12 7M3 14H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </a>
+              </div>
             </motion.div>
           </div>
 
