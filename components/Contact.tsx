@@ -27,7 +27,7 @@ export default function Contact() {
               className="flex items-center gap-4 mb-8"
             >
               <span className="inline-block w-8 h-px bg-[#B8975A]" />
-              <span className="text-[10px] tracking-[0.35em] uppercase text-[#B8975A]">
+              <span className="text-[11px] tracking-[0.30em] uppercase text-[#C9AE84]">
                 Begin a Project
               </span>
             </motion.div>
@@ -49,7 +49,7 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="space-y-6 text-[14px] font-light text-[#F5F0E8]/50 leading-relaxed mb-16"
+              className="space-y-6 text-[15px] font-light text-[#F5F0E8]/65 leading-relaxed mb-16"
             >
               <p>
                 Whether you are at the earliest stage of a new build, planning
@@ -65,24 +65,24 @@ export default function Contact() {
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 0.6 }}
-              className="space-y-4 text-[13px]"
+              className="space-y-5 text-[14px]"
             >
               <div>
-                <div className="text-[9px] tracking-[0.3em] uppercase text-[#B8975A] mb-1">Email</div>
-                <a href="mailto:geral@luxurycine.com" className="text-[#F5F0E8]/60 hover:text-[#F5F0E8] transition-colors">
+                <div className="text-[10px] tracking-[0.26em] uppercase text-[#C9AE84] mb-1.5">Email</div>
+                <a href="mailto:geral@luxurycine.com" className="text-[#F5F0E8]/70 hover:text-[#F5F0E8] transition-colors">
                   geral@luxurycine.com
                 </a>
               </div>
               <div>
-                <div className="text-[9px] tracking-[0.3em] uppercase text-[#B8975A] mb-1">Phone</div>
-                <a href="tel:+351289090900" className="text-[#F5F0E8]/60 hover:text-[#F5F0E8] transition-colors">
+                <div className="text-[10px] tracking-[0.26em] uppercase text-[#C9AE84] mb-1.5">Phone</div>
+                <a href="tel:+351289090900" className="text-[#F5F0E8]/70 hover:text-[#F5F0E8] transition-colors">
                   (+351) 289 090 900
                 </a>
               </div>
               <div>
-                <div className="text-[9px] tracking-[0.3em] uppercase text-[#B8975A] mb-1">Studios</div>
-                <p className="text-[#F5F0E8]/60">Quinta do Lago — Algarve, Portugal</p>
-                <p className="text-[#F5F0E8]/60">Lisboa, Portugal</p>
+                <div className="text-[10px] tracking-[0.26em] uppercase text-[#C9AE84] mb-1.5">Studios</div>
+                <p className="text-[#F5F0E8]/70">Quinta do Lago — Algarve, Portugal</p>
+                <p className="text-[#F5F0E8]/70">Lisboa, Portugal</p>
               </div>
             </motion.div>
           </div>
@@ -99,7 +99,7 @@ export default function Contact() {
                 <h3 className="font-serif text-3xl text-[#F5F0E8] font-light mb-4">
                   Thank you.
                 </h3>
-                <p className="text-[14px] text-[#F5F0E8]/50 leading-relaxed">
+                <p className="text-[15px] text-[#F5F0E8]/65 leading-relaxed">
                   We will be in touch within one business day.
                 </p>
               </div>
@@ -112,14 +112,14 @@ export default function Contact() {
                 <FormField label="Phone" name="phone" type="tel" placeholder="+44 (0) 000 000 0000" />
                 <FormField label="Project Location" name="location" type="text" placeholder="City, Country" />
                 <div>
-                  <label className="block text-[9px] tracking-[0.25em] uppercase text-[#F5F0E8]/40 mb-3">
+                  <label className="block text-[10px] tracking-[0.22em] uppercase text-[#F5F0E8]/55 mb-3">
                     Tell us about your project
                   </label>
                   <textarea
                     name="message"
                     rows={5}
                     placeholder="New build, renovation, project scale, timeline..."
-                    className="w-full bg-transparent border border-[#F5F0E8]/10 text-[#F5F0E8] text-[13px] px-5 py-4 focus:outline-none focus:border-[#B8975A] transition-colors duration-300 placeholder:text-[#F5F0E8]/20 resize-none"
+                    className="w-full bg-transparent border border-[#F5F0E8]/15 text-[#F5F0E8] text-[14px] px-5 py-4 focus:outline-none focus:border-[#B8975A] transition-colors duration-300 placeholder:text-[#F5F0E8]/30 resize-none"
                   />
                 </div>
                 <button
@@ -128,7 +128,7 @@ export default function Contact() {
                 >
                   Send Enquiry
                 </button>
-                <p className="text-[11px] text-[#F5F0E8]/25 text-center leading-relaxed">
+                <p className="text-[11px] text-[#F5F0E8]/40 text-center leading-relaxed">
                   All enquiries are treated in complete confidence and replied to within one business day.
                 </p>
               </form>
@@ -155,7 +155,7 @@ function FormField({
 }) {
   return (
     <div>
-      <label className="block text-[9px] tracking-[0.25em] uppercase text-[#F5F0E8]/40 mb-3">
+      <label className="block text-[10px] tracking-[0.22em] uppercase text-[#F5F0E8]/55 mb-3">
         {label}
       </label>
       <input
@@ -163,7 +163,7 @@ function FormField({
         name={name}
         required={required}
         placeholder={placeholder}
-        className="w-full bg-transparent border-b border-[#F5F0E8]/10 text-[#F5F0E8] text-[13px] py-3 focus:outline-none focus:border-[#B8975A] transition-colors duration-300 placeholder:text-[#F5F0E8]/20"
+        className="w-full bg-transparent border-b border-[#F5F0E8]/15 text-[#F5F0E8] text-[14px] py-3 focus:outline-none focus:border-[#B8975A] transition-colors duration-300 placeholder:text-[#F5F0E8]/30"
       />
     </div>
   )

@@ -31,14 +31,14 @@ export default function Footer() {
             <div className="font-['Cormorant_Garamond'] text-[1.15rem] tracking-[0.18em] uppercase text-[#E8E4DC]/90 font-light mb-6">
               LuxuryCine
             </div>
-            <p className="text-[12px] text-[#E8E4DC]/30 leading-loose font-light max-w-[220px]">
+            <p className="text-[13px] text-[#E8E4DC]/50 leading-loose font-light max-w-[220px]">
               Private cinema design for discerning clients, architects and developers.
             </p>
-            <div className="mt-4 space-y-1.5 text-[11px] text-[#E8E4DC]/40 font-light">
+            <div className="mt-4 space-y-1.5 text-[12px] text-[#E8E4DC]/55 font-light">
               <p>Quinta do Lago — Algarve, Portugal</p>
               <p>Lisboa, Portugal</p>
               <a href="mailto:geral@luxurycine.com"
-                className="block text-[#9C8660]/70 hover:text-[#9C8660] transition-colors duration-300 mt-2">
+                className="block text-[#B09A72] hover:text-[#C9AE84] transition-colors duration-300 mt-2">
                 geral@luxurycine.com
               </a>
             </div>
@@ -46,12 +46,12 @@ export default function Footer() {
 
           {/* Nav */}
           <div className="md:col-span-3 md:col-start-6">
-            <div className="text-[9px] tracking-[0.3em] uppercase text-[#9C8660]/60 mb-7">Navigation</div>
+            <div className="text-[10px] tracking-[0.26em] uppercase text-[#9C8660]/70 mb-7">Navigation</div>
             <ul className="space-y-3.5">
               {nav.map(l => (
                 <li key={l.label}>
                   <a href={l.href}
-                    className="text-[12px] font-light text-[#E8E4DC]/30 hover:text-[#E8E4DC]/70 transition-colors duration-400">
+                    className="text-[13px] font-light text-[#E8E4DC]/50 hover:text-[#E8E4DC]/85 transition-colors duration-400">
                     {l.label}
                   </a>
                 </li>
@@ -61,11 +61,11 @@ export default function Footer() {
 
           {/* Services */}
           <div className="md:col-span-3 md:col-start-10">
-            <div className="text-[9px] tracking-[0.3em] uppercase text-[#9C8660]/60 mb-7">Services</div>
+            <div className="text-[10px] tracking-[0.26em] uppercase text-[#9C8660]/70 mb-7">Services</div>
             <ul className="space-y-3.5">
               {services.map(s => (
                 <li key={s}>
-                  <span className="text-[12px] font-light text-[#E8E4DC]/30">{s}</span>
+                  <span className="text-[13px] font-light text-[#E8E4DC]/50">{s}</span>
                 </li>
               ))}
             </ul>
@@ -74,20 +74,20 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <p className="text-[10px] tracking-[0.12em] text-[#E8E4DC]/18 font-light">
+          <p className="text-[11px] tracking-[0.10em] text-[#E8E4DC]/35 font-light">
             © {new Date().getFullYear()} LuxuryCine. All rights reserved.
           </p>
           <div className="flex items-center gap-8">
             <a href="https://instagram.com/luxurycine"
-              className="text-[10px] tracking-[0.2em] uppercase text-[#E8E4DC]/20 hover:text-[#9C8660]/60 transition-colors duration-400">
+              className="text-[11px] tracking-[0.18em] uppercase text-[#E8E4DC]/35 hover:text-[#9C8660]/80 transition-colors duration-400">
               Instagram
             </a>
             <a href="https://linkedin.com/company/luxurycine"
-              className="text-[10px] tracking-[0.2em] uppercase text-[#E8E4DC]/20 hover:text-[#9C8660]/60 transition-colors duration-400">
+              className="text-[11px] tracking-[0.18em] uppercase text-[#E8E4DC]/35 hover:text-[#9C8660]/80 transition-colors duration-400">
               LinkedIn
             </a>
             <a href="#"
-              className="text-[10px] tracking-[0.2em] uppercase text-[#E8E4DC]/20 hover:text-[#E8E4DC]/40 transition-colors duration-400">
+              className="text-[11px] tracking-[0.18em] uppercase text-[#E8E4DC]/35 hover:text-[#E8E4DC]/60 transition-colors duration-400">
               Privacy
             </a>
           </div>

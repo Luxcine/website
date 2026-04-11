@@ -1,21 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getBookingByRef } from '@/lib/saloneStore'
 
-const PASSKIT_KEY     = process.env.PASSKIT_API_KEY?.trim()
-const TICKET_TYPE_ID  = '2BXz1KyaECKtjG48aQpBNi'
-const EVENT_ID        = '78RxfpSFzLkfojb08PoAMh'
-const API             = 'https://api.pub1.passkit.io'
+const PASSKIT_KEY    = process.env.PASSKIT_API_KEY?.trim()
+const TICKET_TYPE_ID = '2BXz1KyaECKtjG48aQpBNi'
+const EVENT_ID       = '78RxfpSFzLkfojb08PoAMh'
+const PRODUCTION_ID  = '3ZgwrK1vePKYJVNO74VYA4'
+const API            = 'https://api.pub1.passkit.io'
+const CDN            = 'https://pub1.pskt.io'
 
-async function pk(path: string, body: object) {
-  const res = await fetch(`${API}${path}`, {
+const AUTH = () => ({ 'Authorization': `Bearer ${PASSKIT_KEY}`, 'Content-Type': 'application/json' })
+
+async function getTicket(ref: string) {
+  const url = `${API}/eventTickets/ticket/ticketNumber?ticketNumber=${encodeURIComponent(ref)}&productionId=${PRODUCTION_ID}`
+  const res = await fetch(url, { headers: { 'Authorization': `Bearer ${PASSKIT_KEY}` } })
+  const data = await res.json()
+  if (data.error || !data.id) return null
+  return data as { id: string }
+}
+
+async function issueTicket(ref: string, name: string, email: string) {
+  const [forename, ...rest] = name.trim().split(' ')
+  const surname = rest.join(' ') || forename
+  const res = await fetch(`${API}/eventTickets/ticket`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${PASSKIT_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
+    headers: AUTH(),
+    body: JSON.stringify({
+      ticketTypeId: TICKET_TYPE_ID,
+      eventId:      EVENT_ID,
+      ticketNumber: ref,
+      orderNumber:  ref,
+      person: { forename, surname, displayName: name, emailAddress: email },
+    }),
   })
-  return res.json()
+  return res.json() as Promise<{ id?: string; error?: string }>
 }
 
 export async function GET(req: NextRequest) {
@@ -30,57 +47,23 @@ export async function GET(req: NextRequest) {
   if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
   if (booking.cancelled) return NextResponse.json({ error: 'Booking cancelled' }, { status: 410 })
 
-  // Step 1: Try to get existing pass first (ticket may already be issued)
-  let passData = await pk('/eventTickets/pass', {
-    ticketNumber: ref,
-    format: ['APPLE_PASS_BUNDLE'],
-  })
+  // Try to find existing ticket
+  let ticket = await getTicket(ref)
 
-  // Step 2: If no pass found, issue the ticket then fetch the pass
-  if (passData.error || !passData.passBundles) {
-    // Issue the ticket
-    const [forename, ...rest] = booking.name.trim().split(' ')
-    const surname = rest.join(' ') || forename
-
-    const issued = await pk('/eventTickets/ticket', {
-      ticketTypeId: TICKET_TYPE_ID,
-      eventId:      EVENT_ID,
-      ticketNumber: ref,
-      orderNumber:  ref,
-      person: {
-        forename:     forename,
-        surname:      surname,
-        displayName:  booking.name,
-        emailAddress: booking.email ?? '',
-      },
-    })
-
+  // Issue ticket if not yet created
+  if (!ticket) {
+    const issued = await issueTicket(ref, booking.name, booking.email ?? '')
     if (issued.error) {
       console.error('PassKit issue ticket error:', issued.error)
       return NextResponse.json({ error: issued.error }, { status: 503 })
     }
-
-    // Fetch the .pkpass
-    passData = await pk('/eventTickets/pass', {
-      ticketNumber: ref,
-      format: ['APPLE_PASS_BUNDLE'],
-    })
+    // Fetch to get the ticket ID
+    ticket = await getTicket(ref)
+    if (!ticket) {
+      return NextResponse.json({ error: 'Could not retrieve ticket after issuance' }, { status: 503 })
+    }
   }
 
-  // Extract base64 .pkpass bundle
-  const bundle = passData.passBundles?.[0]
-  if (!bundle?.applePassBundle) {
-    console.error('PassKit pass bundle error:', JSON.stringify(passData))
-    return NextResponse.json({ error: 'Could not generate pass' }, { status: 503 })
-  }
-
-  const pkpassBuffer = Buffer.from(bundle.applePassBundle, 'base64')
-
-  return new NextResponse(pkpassBuffer as unknown as BodyInit, {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/vnd.apple.pkpass',
-      'Content-Disposition': `attachment; filename="${ref}.pkpass"`,
-    },
-  })
+  // Redirect to PassKit CDN direct .pkpass download URL
+  return NextResponse.redirect(`${CDN}/${ticket.id}.pkpass`)
 }

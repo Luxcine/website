@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
     genericType: 'GENERIC_TYPE_UNSPECIFIED',
     hexBackgroundColor: '#080808',
     logo: {
-      sourceUri: { uri: 'https://luxcine.vercel.app/assets/logos/luxcine-white.png' },
+      sourceUri: { uri: 'https://luxurycine.com/assets/logos/luxcine-white.png' },
       contentDescription: { defaultValue: { language: 'en', value: 'LuxCine' } },
     },
     cardTitle: { defaultValue: { language: 'en', value: 'LuxCine' } },
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
   const jwt = signJWT({
     iss: SA_EMAIL,
     aud: 'google',
-    origins: ['https://luxcine.vercel.app'],
+    origins: ['https://luxurycine.com'],
     iat: Math.floor(Date.now() / 1000),
     typ: 'savetowallet',
     payload: { genericClasses: [genericClass], genericObjects: [genericObject] },

@@ -7,6 +7,7 @@ import ExperienceJourney from '@/components/ExperienceJourney'
 import TechPartners from '@/components/TechPartners'
 import WhyLuxCine from '@/components/WhyLuxCine'
 import SaloneBanner from '@/components/SaloneBanner'
+import BrochureQR from '@/components/BrochureQR'
 import Contact from '@/components/Contact'
 import FinalCTA from '@/components/FinalCTA'
 import Footer from '@/components/Footer'
@@ -24,6 +25,7 @@ export default function Home() {
         <ExperienceJourney />
         <TechPartners />
         <WhyLuxCine />
+        <BrochureQR />
         <Contact />
         <FinalCTA />
       </main>

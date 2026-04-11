@@ -34,7 +34,7 @@ export default function BrandStatement() {
           {/* Right col — offset lower for editorial feel */}
           <div className="md:col-span-6 md:col-start-7 md:pt-24 space-y-12">
             <motion.p {...fade(0.2)} animate={inView ? { opacity: 1, y: 0 } : {}}
-              className="text-[9px] tracking-[0.38em] uppercase text-[#9C8660]">
+              className="text-[11px] tracking-[0.32em] uppercase text-[#B09A72]">
               Our Philosophy
             </motion.p>
 
@@ -45,10 +45,10 @@ export default function BrandStatement() {
             </motion.h2>
 
             <motion.div {...fade(0.5)} animate={inView ? { opacity: 1, y: 0 } : {}}
-              className="space-y-5 text-[15px] text-[#E8E4DC]/70 leading-loose font-light max-w-sm">
+              className="space-y-5 text-[15px] text-[#E8E4DC]/75 leading-loose font-light max-w-sm">
               <p>LuxuryCine was born from a simple conviction: the finest private cinemas are not installed — they are designed. Every space begins with architecture, not equipment.</p>
               <p>We work alongside architects and interior designers to conceive spaces where acoustic precision, visual perfection and architectural integrity exist as one seamless whole.</p>
-              <p className="text-[#E8E4DC]/60 italic font-['Cormorant_Garamond'] text-base">The technology disappears. The experience remains.</p>
+              <p className="text-[#E8E4DC]/70 italic font-['Cormorant_Garamond'] text-base">The technology disappears. The experience remains.</p>
             </motion.div>
 
             {/* Stats — B&O precision */}
@@ -57,7 +57,7 @@ export default function BrandStatement() {
               {[['20+', 'Years'], ['60+', 'Spaces'], ['100%', 'Bespoke']].map(([n, l]) => (
                 <div key={l} className="pr-6 border-r border-[#E8E4DC]/6 last:border-0 last:pl-6 first:pl-0 [&:not(:first-child)]:pl-6">
                   <div className="font-['Cormorant_Garamond'] text-4xl font-light text-[#9C8660] mb-1">{n}</div>
-                  <div className="text-[9px] tracking-[0.28em] uppercase text-[#E8E4DC]/45">{l}</div>
+                  <div className="text-[10px] tracking-[0.24em] uppercase text-[#E8E4DC]/60">{l}</div>
                 </div>
               ))}
             </motion.div>

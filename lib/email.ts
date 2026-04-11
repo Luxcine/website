@@ -23,7 +23,9 @@ export interface BookingEmailData {
 
 export async function sendBookingConfirmation(data: BookingEmailData): Promise<void> {
   const dateLabel = DAY_LABELS[data.date] ?? data.date
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(data.ref)}&margin=8`
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(data.ref)}&margin=8&ecc=H`
+  const brochureUrl = 'https://www.luxurycine.com/brochure'
+  const brochureQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(brochureUrl)}&margin=8&ecc=H`
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -107,6 +109,26 @@ export async function sendBookingConfirmation(data: BookingEmailData): Promise<v
                     <a href="https://luxcine.vercel.app/api/wallet/google?ref=${escHtml(data.ref)}" style="display:block;background-color:#1a73e8;padding:12px 10px;text-align:center;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:0.12em;color:#ffffff;">
                       &#11044; &nbsp;Google Wallet
                     </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Brochure -->
+          <tr>
+            <td style="padding:28px 0 0;">
+              <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:rgba(255,255,255,0.02);border:1px solid rgba(156,134,96,0.22);">
+                <tr>
+                  <td valign="middle" style="padding:28px 28px 28px 32px;">
+                    <p style="margin:0 0 6px;font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:0.32em;text-transform:uppercase;color:#9C8660;">Brochure</p>
+                    <p style="margin:0 0 14px;font-family:Georgia,'Times New Roman',serif;font-size:20px;font-weight:300;color:rgba(232,228,220,0.88);line-height:1.25;">The full LuxuryCine story</p>
+                    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:rgba(232,228,220,0.45);line-height:1.6;">Spaces, partners, process &mdash;<br>a curated publication.</p>
+                    <a href="${brochureUrl}" style="display:inline-block;background-color:#B8975A;padding:12px 22px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#0D0D0D;font-weight:600;">Download Brochure</a>
+                  </td>
+                  <td valign="middle" align="right" width="150" style="padding:20px 24px 20px 0;">
+                    <img src="${brochureQrUrl}" width="130" height="130" alt="Scan to download LuxuryCine brochure" style="display:block;border:6px solid #F5F0E8;background-color:#F5F0E8;" />
+                    <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:0.22em;text-transform:uppercase;text-align:center;color:rgba(232,228,220,0.35);">Scan to download</p>
                   </td>
                 </tr>
               </table>

@@ -20,7 +20,7 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ duration: 1.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[9px] tracking-[0.38em] uppercase text-[#9C8660] mb-10 font-normal">
+          className="text-[11px] tracking-[0.32em] uppercase text-[#B09A72] mb-10 font-normal">
           Private Cinema Atelier
         </motion.p>
 
@@ -38,17 +38,17 @@ export default function Hero() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.9 }}
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-          <p className="text-[15px] text-[#E8E4DC]/70 font-light leading-loose max-w-sm">
+          <p className="text-[15px] text-[#E8E4DC]/75 font-light leading-loose max-w-sm">
             We design and engineer bespoke private cinema spaces
             for those who understand the finest experiences are built — not bought.
           </p>
           <div className="flex items-center gap-8">
             <a href="#contact"
-              className="text-[10px] tracking-[0.22em] uppercase text-[#E8E4DC]/90 hover:text-[#9C8660] transition-colors duration-500 border-b border-[#E8E4DC]/20 hover:border-[#9C8660] pb-0.5">
+              className="text-[11px] tracking-[0.20em] uppercase text-[#E8E4DC] hover:text-[#9C8660] transition-colors duration-500 border-b border-[#E8E4DC]/30 hover:border-[#9C8660] pb-0.5">
               Begin Your Project
             </a>
             <a href="#spaces"
-              className="text-[10px] tracking-[0.22em] uppercase text-[#E8E4DC]/30 hover:text-[#E8E4DC]/60 transition-colors duration-500">
+              className="text-[11px] tracking-[0.20em] uppercase text-[#E8E4DC]/50 hover:text-[#E8E4DC]/80 transition-colors duration-500">
               Our Work
             </a>
           </div>

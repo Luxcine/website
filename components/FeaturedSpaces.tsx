@@ -25,7 +25,7 @@ export default function FeaturedSpaces() {
           <div>
             <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
               transition={{ duration: 1 }}
-              className="text-[9px] tracking-[0.38em] uppercase text-[#9C8660] mb-5">
+              className="text-[11px] tracking-[0.32em] uppercase text-[#B09A72] mb-5">
               Featured Spaces
             </motion.p>
             <motion.h2 initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -36,7 +36,7 @@ export default function FeaturedSpaces() {
           </div>
           <motion.a href="#contact" initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
             transition={{ delay: 0.4 }}
-            className="hidden md:block text-[10px] tracking-[0.22em] uppercase text-[#E8E4DC]/30 hover:text-[#9C8660] transition-colors duration-400 border-b border-transparent hover:border-[#9C8660]/40 pb-0.5">
+            className="hidden md:block text-[11px] tracking-[0.20em] uppercase text-[#E8E4DC]/50 hover:text-[#9C8660] transition-colors duration-400 border-b border-transparent hover:border-[#9C8660]/40 pb-0.5">
             All Projects
           </motion.a>
         </div>
@@ -71,11 +71,11 @@ function SpaceCard({ space, i, inView, cn }: { space: typeof spaces[0]; i: numbe
 
       {/* Content — slides up on hover */}
       <div className="absolute bottom-0 left-0 right-0 p-7 md:p-9">
-        <p className="text-[9px] tracking-[0.3em] uppercase text-[#9C8660] mb-2">{space.label}</p>
+        <p className="text-[10px] tracking-[0.26em] uppercase text-[#B09A72] mb-2">{space.label}</p>
         <h3 className="font-['Cormorant_Garamond'] text-xl md:text-2xl text-[#E8E4DC] font-light leading-tight">
           {space.title}
         </h3>
-        <p className="text-[12px] text-[#E8E4DC]/40 leading-relaxed max-w-sm mt-2.5
+        <p className="text-[13px] text-[#E8E4DC]/65 leading-relaxed max-w-sm mt-2.5
           opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
           {space.desc}
         </p>

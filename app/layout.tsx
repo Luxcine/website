@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://luxurycine.com'),
   title: 'LuxuryCine — Private Cinema Design & Integration',
   description:
     'LuxuryCine designs and engineers bespoke private cinema experiences for discerning clients, architects and luxury developers. Acoustic precision. Architectural integration. Invisible technology.',

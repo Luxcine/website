@@ -32,7 +32,7 @@ export default function FinalCTA() {
           className="flex items-center justify-center gap-4 mb-10"
         >
           <span className="inline-block w-8 h-px bg-[#B8975A]" />
-          <span className="text-[10px] tracking-[0.35em] uppercase text-[#B8975A]">
+          <span className="text-[11px] tracking-[0.30em] uppercase text-[#C9AE84]">
             LuxuryCine
           </span>
           <span className="inline-block w-8 h-px bg-[#B8975A]" />

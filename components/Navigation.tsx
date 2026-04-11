@@ -42,7 +42,7 @@ export default function Navigation() {
           <nav className="hidden md:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((l) => (
               <a key={l.href} href={l.href}
-                className="text-[10px] tracking-[0.28em] uppercase text-[#E8E4DC]/40 hover:text-[#E8E4DC]/80 transition-colors duration-500 font-normal">
+                className="text-[11px] tracking-[0.22em] uppercase text-[#E8E4DC]/65 hover:text-[#E8E4DC] transition-colors duration-500 font-normal">
                 {l.label}
               </a>
             ))}
@@ -50,7 +50,7 @@ export default function Navigation() {
 
           <div className="flex items-center gap-7">
             <a href="#contact"
-              className="hidden md:block text-[10px] tracking-[0.22em] uppercase text-[#9C8660] hover:text-[#B09A72] transition-colors duration-300 font-normal">
+              className="hidden md:block text-[11px] tracking-[0.18em] uppercase text-[#B09A72] hover:text-[#C9AE84] transition-colors duration-300 font-normal">
               Begin a Project
             </a>
             {/* Mobile hamburger */}

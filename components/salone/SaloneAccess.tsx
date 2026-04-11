@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import Image from 'next/image'
 
-const BOOKING_URL = 'https://luxcine.vercel.app/salone-2026'
+const BOOKING_URL = 'https://luxurycine.com/salone-2026'
 const QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(BOOKING_URL)}&color=9C8660&bgcolor=080808&margin=14&qzone=1`
 
 export default function SaloneAccess() {

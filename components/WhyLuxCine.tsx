@@ -30,7 +30,7 @@ export default function WhyLuxCine() {
         <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 1.4, delay: 0.3 }}
           className="absolute bottom-12 md:bottom-16 left-8 md:left-14 max-w-lg">
-          <p className="font-['Cormorant_Garamond'] text-[clamp(1.5rem,3vw,2.4rem)] text-[#E8E4DC]/80 font-light italic leading-[1.15]">
+          <p className="font-['Cormorant_Garamond'] text-[clamp(1.5rem,3vw,2.4rem)] text-[#E8E4DC]/90 font-light italic leading-[1.15]">
             "Not a cinema installer.<br />A cinema atelier."
           </p>
           <div className="w-8 h-px bg-[#9C8660]/50 mt-5" />
@@ -46,7 +46,7 @@ export default function WhyLuxCine() {
           </motion.h2>
           <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="md:col-span-5 md:col-start-8 text-[15px] text-[#E8E4DC]/65 leading-loose font-light self-end">
+            className="md:col-span-5 md:col-start-8 text-[15px] text-[#E8E4DC]/75 leading-loose font-light self-end">
             The private cinema industry is filled with capable integrators. LuxuryCine is something different — a design practice that happens to engineer extraordinary cinemas.
           </motion.p>
         </div>
@@ -58,10 +58,10 @@ export default function WhyLuxCine() {
               initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
               transition={{ duration: 0.9, delay: i * 0.1 + 0.4 }}
               className={`group py-12 md:py-14 ${i % 2 === 0 ? 'md:pr-16 md:border-r border-[#E8E4DC]/6' : 'md:pl-16'}`}>
-              <h3 className="font-['Cormorant_Garamond'] text-[1.4rem] text-[#E8E4DC]/70 group-hover:text-[#E8E4DC] font-light mb-4 transition-colors duration-500">
+              <h3 className="font-['Cormorant_Garamond'] text-[1.4rem] text-[#E8E4DC]/80 group-hover:text-[#E8E4DC] font-light mb-4 transition-colors duration-500">
                 {item.title}
               </h3>
-              <p className="text-[15px] text-[#E8E4DC]/65 leading-loose font-light">{item.body}</p>
+              <p className="text-[15px] text-[#E8E4DC]/70 leading-loose font-light">{item.body}</p>
             </motion.div>
           ))}
         </div>

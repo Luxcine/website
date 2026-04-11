@@ -59,7 +59,7 @@ export default function ExperienceJourney() {
               className="flex items-center gap-4 mb-8"
             >
               <span className="inline-block w-8 h-px bg-[#B8975A]" />
-              <span className="text-[10px] tracking-[0.35em] uppercase text-[#B8975A]">
+              <span className="text-[11px] tracking-[0.30em] uppercase text-[#C9AE84]">
                 Our Process
               </span>
             </motion.div>
@@ -78,7 +78,7 @@ export default function ExperienceJourney() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-[15px] font-light text-[#F5F0E8]/70 leading-relaxed"
+            className="text-[15px] font-light text-[#F5F0E8]/75 leading-relaxed"
           >
             Our process is that of an architectural atelier — methodical, considered,
             and guided by a single purpose: to deliver the exceptional.
@@ -113,10 +113,10 @@ export default function ExperienceJourney() {
                   <h3 className="font-serif text-2xl md:text-3xl text-[#F5F0E8] font-light mb-1">
                     {step.title}
                   </h3>
-                  <div className="text-[10px] tracking-[0.2em] uppercase text-[#B8975A] mb-4">
+                  <div className="text-[11px] tracking-[0.18em] uppercase text-[#C9AE84] mb-4">
                     {step.subtitle}
                   </div>
-                  <p className="text-[15px] text-[#F5F0E8]/70 leading-relaxed font-light max-w-sm">
+                  <p className="text-[15px] text-[#F5F0E8]/75 leading-relaxed font-light max-w-sm">
                     {step.description}
                   </p>
                 </div>
@@ -149,7 +149,7 @@ export default function ExperienceJourney() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0D0D0D]/60 to-transparent" />
           <div className="absolute bottom-10 left-10 md:left-16">
-            <div className="text-[10px] tracking-[0.3em] uppercase text-[#B8975A] mb-2">Every detail considered</div>
+            <div className="text-[11px] tracking-[0.26em] uppercase text-[#C9AE84] mb-2">Every detail considered</div>
             <p className="font-serif text-2xl md:text-3xl text-[#F5F0E8] font-light italic max-w-md">
               "The room performs before anyone sits down."
             </p>

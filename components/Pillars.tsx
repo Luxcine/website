@@ -32,7 +32,7 @@ export default function Pillars() {
           <motion.p
             initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 1.2, delay: 0.2 }}
-            className="text-[15px] text-[#E8E4DC]/65 leading-loose self-end max-w-sm font-light">
+            className="text-[15px] text-[#E8E4DC]/75 leading-loose self-end max-w-sm font-light">
             Every decision we make is guided by a single measure: does this serve the experience? Not the specification. The experience.
           </motion.p>
         </div>
@@ -46,19 +46,19 @@ export default function Pillars() {
               className="group grid md:grid-cols-12 gap-4 md:gap-8 py-9 md:py-10 cursor-default">
 
               {/* Number */}
-              <div className="md:col-span-1 font-['Cormorant_Garamond'] text-[13px] text-[#9C8660]/40 group-hover:text-[#9C8660]/70 transition-colors duration-500 font-light pt-0.5 tabular-nums">
+              <div className="md:col-span-1 font-['Cormorant_Garamond'] text-[14px] text-[#9C8660]/55 group-hover:text-[#9C8660]/80 transition-colors duration-500 font-light pt-0.5 tabular-nums">
                 {p.n}
               </div>
 
               {/* Title */}
               <div className="md:col-span-3">
-                <h3 className="font-['Cormorant_Garamond'] text-[1.35rem] text-[#E8E4DC]/80 group-hover:text-[#E8E4DC] font-light transition-colors duration-500 leading-tight">
+                <h3 className="font-['Cormorant_Garamond'] text-[1.35rem] text-[#E8E4DC]/85 group-hover:text-[#E8E4DC] font-light transition-colors duration-500 leading-tight">
                   {p.title}
                 </h3>
               </div>
 
               {/* Body */}
-              <p className="md:col-span-6 text-[15px] text-[#E8E4DC]/65 leading-loose font-light group-hover:text-[#E8E4DC]/80 transition-colors duration-500">
+              <p className="md:col-span-6 text-[15px] text-[#E8E4DC]/70 leading-loose font-light group-hover:text-[#E8E4DC]/85 transition-colors duration-500">
                 {p.body}
               </p>
 
