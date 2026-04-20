@@ -1,16 +1,16 @@
 'use client'
 
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 const EVENT_DAYS = [
   { date: '2026-04-21', label: 'Tue 21 Apr' },
-  { date: '2026-04-22', label: 'Tue 22 Apr' },
-  { date: '2026-04-23', label: 'Wed 23 Apr' },
-  { date: '2026-04-24', label: 'Thu 24 Apr' },
-  { date: '2026-04-25', label: 'Fri 25 Apr' },
-  { date: '2026-04-26', label: 'Sat 26 Apr' },
+  { date: '2026-04-22', label: 'Wed 22 Apr' },
+  { date: '2026-04-23', label: 'Thu 23 Apr' },
+  { date: '2026-04-24', label: 'Fri 24 Apr' },
+  { date: '2026-04-25', label: 'Sat 25 Apr' },
+  { date: '2026-04-26', label: 'Sun 26 Apr' },
 ]
 
 // Slots every 40 min starting 09:50
@@ -30,22 +30,7 @@ function generateSlots(): string[] {
 }
 const ALL_SLOTS = generateSlots()
 
-// Mock availability — in production replace with API call
-// Capacity: 12 + 3 overbooking tolerance = 15 hard max
-const MOCK_BOOKED: Record<string, number> = {
-  '2026-04-21_10:00': 12,
-  '2026-04-21_10:30': 15,
-  '2026-04-22_14:00': 14,
-  '2026-04-23_11:00': 15,
-}
 const CAPACITY = 12
-const HARD_MAX = 15 // +3 overbooking
-
-function isAvailable(date: string, slot: string): boolean {
-  const key = `${date}_${slot}`
-  const booked = MOCK_BOOKED[key] ?? 0
-  return booked < HARD_MAX
-}
 
 // ─── Step types ───────────────────────────────────────────────────────────────
 type Step = 'date' | 'time' | 'guests' | 'details' | 'confirm'
@@ -301,16 +286,40 @@ function StepTime({
   onBack: () => void
 }) {
   const dayLabel = EVENT_DAYS.find((d) => d.date === date)?.label ?? date
+  const [slots, setSlots] = useState<{ slot: string; available: boolean }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchAvailability = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/salone/book?date=${date}`)
+      if (res.ok) {
+        const data = await res.json()
+        setSlots(data.slots)
+      } else {
+        setSlots(ALL_SLOTS.map((s) => ({ slot: s, available: true })))
+      }
+    } catch {
+      setSlots(ALL_SLOTS.map((s) => ({ slot: s, available: true })))
+    } finally {
+      setLoading(false)
+    }
+  }, [date])
+
+  useEffect(() => { fetchAvailability() }, [fetchAvailability])
 
   return (
     <div>
       <BackButton onClick={onBack} />
       <h3 className="font-serif text-2xl text-[#F5F0E8] font-light mb-2">Choose a time</h3>
-      <p className="text-[12px] text-[#F5F0E8]/40 mb-10">{dayLabel} — sessions every 30 minutes</p>
-      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-        {ALL_SLOTS.map((slot) => {
-          const available = isAvailable(date, slot)
-          return (
+      <p className="text-[12px] text-[#F5F0E8]/40 mb-10">{dayLabel} — sessions every 40 minutes</p>
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-[12px] text-[#F5F0E8]/30 tracking-[0.15em] uppercase animate-pulse">Loading availability…</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+          {slots.map(({ slot, available }) => (
             <button
               key={slot}
               onClick={() => available && onSelect(slot)}
@@ -325,9 +334,9 @@ function StepTime({
             >
               {slot}
             </button>
-          )
-        })}
-      </div>
+          ))}
+        </div>
+      )}
       <p className="mt-6 text-[11px] text-[#F5F0E8]/20">Slots marked as unavailable are fully booked.</p>
     </div>
   )

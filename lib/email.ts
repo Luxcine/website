@@ -7,9 +7,12 @@ function getResend() {
 const FROM = process.env.EMAIL_FROM ?? 'LuxCine <bookings@luxurycine.com>'
 
 const DAY_LABELS: Record<string, string> = {
+  '2026-04-21': 'Tuesday 21 April',
   '2026-04-22': 'Wednesday 22 April',
   '2026-04-23': 'Thursday 23 April',
   '2026-04-24': 'Friday 24 April',
+  '2026-04-25': 'Saturday 25 April',
+  '2026-04-26': 'Sunday 26 April',
 }
 
 export interface BookingEmailData {
