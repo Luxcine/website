@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStore, cancelBooking, purgeCancelled, CAPACITY, HARD_MAX, generateSlots } from '@/lib/saloneStore'
 
+export const dynamic = 'force-dynamic'
+
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN ?? 'luxcine-admin-2026'
 
 function auth(req: NextRequest): boolean {

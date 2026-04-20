@@ -3,6 +3,8 @@ import { getStore, addBooking, updateBooking, HARD_MAX, generateRef, generateSlo
 import { createSaloneLead } from '@/lib/erpnext'
 import { sendBookingConfirmation } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
 interface BookingPayload {
   date: string
   slot: string
