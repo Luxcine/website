@@ -35,7 +35,14 @@ async function readStore(): Promise<StoreData> {
   try {
     const { blobs } = await list({ prefix: BLOB_KEY })
     if (blobs.length === 0) return { bookings: [], seatMap: {} }
-    const res = await fetch(blobs[0].url, {
+    // Use the most recent blob (last in list, sorted by uploadedAt asc)
+    // and clean up any stale duplicates from old addRandomSuffix writes
+    const target = blobs[blobs.length - 1]
+    if (blobs.length > 1) {
+      const stale = blobs.slice(0, -1)
+      del(stale.map(b => b.url)).catch(() => {})
+    }
+    const res = await fetch(target.url, {
       headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
       cache: 'no-store',
     })
