@@ -5,6 +5,7 @@ import { getStore, cancelBooking } from '@/lib/saloneStore'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
+  // Direct blob inspection
   const { blobs } = await list({ prefix: 'salone-bookings' })
   const results = []
   for (const b of blobs) {
@@ -30,7 +31,6 @@ export async function GET() {
     }
   }
 
-  // Also test via getStore() to check if store function returns same data
   const store = await getStore()
   const storeActive = store.bookings.filter(b => !b.cancelled).map(b => b.ref)
   const storeCancelled = store.bookings.filter(b => b.cancelled).map(b => b.ref)
@@ -46,28 +46,89 @@ export async function GET() {
   })
 }
 
-// POST /api/debug/blob?action=cancel&ref=XXX — test cancel and verify
+// POST /api/debug/blob?action=cancel&ref=XXX — test cancel with full tracing
+// POST /api/debug/blob?action=put-test — test raw put+read cycle
 export async function POST(req: Request) {
   const url = new URL(req.url)
   const action = url.searchParams.get('action')
-  const ref = url.searchParams.get('ref')
 
-  if (action === 'cancel' && ref) {
-    const before = await getStore()
-    const beforeState = before.bookings.find(b => b.ref === ref)
+  if (action === 'put-test') {
+    // Test: write a test value, then read it back via list+fetch
+    const testData = { test: true, ts: Date.now() }
+    const putResult = await put('salone-test.json', JSON.stringify(testData), {
+      access: 'private',
+      addRandomSuffix: false,
+      contentType: 'application/json',
+      allowOverwrite: true,
+    })
 
-    const result = await cancelBooking(ref)
-
-    const after = await getStore()
-    const afterState = after.bookings.find(b => b.ref === ref)
+    const { blobs } = await list({ prefix: 'salone-test.json' })
+    let readBack = null
+    if (blobs.length > 0) {
+      const res = await fetch(blobs[0].url, {
+        headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+        cache: 'no-store',
+      })
+      readBack = await res.json()
+    }
 
     return NextResponse.json({
-      ref,
-      cancelResult: result ? 'success' : 'not_found',
-      before: { cancelled: beforeState?.cancelled },
-      after: { cancelled: afterState?.cancelled },
+      putUrl: putResult.url,
+      putPathname: putResult.pathname,
+      listBlobCount: blobs.length,
+      listUrl: blobs[0]?.url,
+      urlsMatch: putResult.url === blobs[0]?.url,
+      readBack,
+      original: testData,
+      match: JSON.stringify(readBack) === JSON.stringify(testData),
     })
   }
 
-  return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
+  if (action === 'cancel') {
+    const ref = url.searchParams.get('ref')
+    if (!ref) return NextResponse.json({ error: 'ref required' }, { status: 400 })
+
+    // Read store BEFORE cancel
+    const storeBefore = await getStore()
+    const beforeBooking = storeBefore.bookings.find(b => b.ref === ref)
+
+    // Do the cancel
+    let cancelError = null
+    let cancelResult = null
+    try {
+      cancelResult = await cancelBooking(ref)
+    } catch (e) {
+      cancelError = String(e)
+    }
+
+    // Read store AFTER cancel
+    const storeAfter = await getStore()
+    const afterBooking = storeAfter.bookings.find(b => b.ref === ref)
+
+    // Also check blob directly
+    const { blobs } = await list({ prefix: 'salone-bookings' })
+    let blobBooking = null
+    if (blobs.length > 0) {
+      const last = blobs[blobs.length - 1]
+      const res = await fetch(last.url, {
+        headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+        cache: 'no-store',
+      })
+      const data = await res.json()
+      blobBooking = data.bookings?.find((b: { ref: string }) => b.ref === ref)
+    }
+
+    return NextResponse.json({
+      ref,
+      cancelResult: cancelResult ? { ref: cancelResult.ref, cancelled: cancelResult.cancelled } : null,
+      cancelError,
+      before: beforeBooking ? { cancelled: beforeBooking.cancelled, ref: beforeBooking.ref } : 'not_found',
+      afterViaStore: afterBooking ? { cancelled: afterBooking.cancelled, ref: afterBooking.ref } : 'not_found',
+      afterViaBlob: blobBooking ? { cancelled: blobBooking.cancelled, ref: blobBooking.ref } : 'not_found',
+      blobCount: blobs.length,
+      blobUploadedAt: blobs[blobs.length - 1]?.uploadedAt,
+    })
+  }
+
+  return NextResponse.json({ error: 'Unknown action. Use ?action=cancel&ref=X or ?action=put-test' }, { status: 400 })
 }
