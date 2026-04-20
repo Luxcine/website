@@ -99,11 +99,12 @@ export default function AdminSalone() {
       })
       if (!res.ok) {
         setError('Failed to cancel booking')
-        fetchData(token) // revert optimistic update
       }
+      // Always re-fetch to sync with persisted state
+      await fetchData(token)
     } catch {
       setError('Network error')
-      fetchData(token)
+      await fetchData(token)
     } finally {
       setCancelling(null)
     }
