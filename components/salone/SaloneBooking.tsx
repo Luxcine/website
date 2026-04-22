@@ -312,7 +312,7 @@ function StepTime({
     <div>
       <BackButton onClick={onBack} />
       <h3 className="font-serif text-2xl text-[#F5F0E8] font-light mb-2">Choose a time</h3>
-      <p className="text-[12px] text-[#F5F0E8]/40 mb-10">{dayLabel} — sessions every 40 minutes</p>
+      <p className="text-[12px] text-[#F5F0E8]/40 mb-10">{dayLabel} — sessions every 20 minutes</p>
       {loading ? (
         <div className="text-center py-12">
           <p className="text-[12px] text-[#F5F0E8]/30 tracking-[0.15em] uppercase animate-pulse">Loading availability…</p>

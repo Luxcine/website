@@ -14,7 +14,7 @@ const infos = [
   },
   {
     title: 'Dates & Hours',
-    lines: ['Tuesday 21 — Sunday 26 April', '10:00 to 18:00 daily', 'Sessions every 40 minutes', 'Last session at 17:30'],
+    lines: ['Tuesday 21 — Sunday 26 April', '10:00 to 18:00 daily', 'Sessions every 20 minutes', 'Last session at 17:30'],
   },
   {
     title: 'For Whom',
