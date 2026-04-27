@@ -19,8 +19,13 @@ interface BookingPayload {
   message?: string
 }
 
-// POST /api/salone/book
-export async function POST(req: NextRequest) {
+// POST /api/salone/book — CLOSED after event
+export async function POST() {
+  return NextResponse.json(
+    { error: 'Bookings for Salone del Mobile.Milano 2026 are now closed. Thank you for your interest.' },
+    { status: 410 }
+  )
+  /* Original booking logic preserved below
   try {
     const body: BookingPayload = await req.json()
     const { date, slot, guests, name, email } = body
@@ -100,6 +105,7 @@ export async function POST(req: NextRequest) {
     console.error('[book] error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
+  */
 }
 
 // GET /api/salone/book?date=YYYY-MM-DD

@@ -42,9 +42,9 @@ export default function SaloneCTA() {
           transition={{ duration: 1.2, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="font-serif text-4xl md:text-6xl font-light text-[#F5F0E8] leading-[1.1] mb-8 max-w-3xl mx-auto"
         >
-          Sessions are
+          A memorable
           <br />
-          <em className="italic text-[#B8975A]">filling quickly.</em>
+          <em className="italic text-[#B8975A]">edition.</em>
         </motion.h2>
 
         <motion.p
@@ -53,7 +53,7 @@ export default function SaloneCTA() {
           transition={{ delay: 0.5 }}
           className="text-[14px] font-light text-[#F5F0E8]/45 mb-12 max-w-md mx-auto"
         >
-          Reserve your appointment now to secure your preferred date and time.
+          Thank you to everyone who joined us at Salone del Mobile.Milano 2026.
         </motion.p>
 
         <motion.div
@@ -62,10 +62,10 @@ export default function SaloneCTA() {
           transition={{ delay: 0.7 }}
         >
           <a
-            href="#booking"
-            className="inline-flex items-center gap-3 bg-[#B8975A] text-[#0D0D0D] text-[11px] tracking-[0.2em] uppercase px-12 py-5 hover:bg-[#D4AF72] transition-colors duration-300 font-medium"
+            href="mailto:geral@luxurycine.com"
+            className="inline-flex items-center gap-3 border border-[#B8975A] text-[#B8975A] text-[11px] tracking-[0.2em] uppercase px-12 py-5 hover:bg-[#B8975A]/10 transition-colors duration-300 font-medium"
           >
-            Reserve Your Session
+            Get in Touch
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

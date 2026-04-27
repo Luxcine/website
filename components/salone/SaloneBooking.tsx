@@ -54,49 +54,10 @@ export default function SaloneBooking() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  const [step, setStep] = useState<Step>('date')
-  const [booking, setBooking] = useState<Partial<BookingData>>({})
-  const [submitted, setSubmitted] = useState(false)
-  const [bookingRef, setBookingRef] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState('')
-
-  const steps: Step[] = ['date', 'time', 'guests', 'details', 'confirm']
-  const stepIndex = steps.indexOf(step)
-
-  function update(data: Partial<BookingData>) {
-    setBooking((prev) => ({ ...prev, ...data }))
-  }
-
-  async function handleSubmit() {
-    setSubmitting(true)
-    setSubmitError('')
-    try {
-      const res = await fetch('/api/salone/book', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(booking),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setSubmitError(data.error ?? 'Something went wrong. Please try again.')
-        setSubmitting(false)
-        return
-      }
-      setBookingRef(data.ref)
-      setSubmitted(true)
-    } catch {
-      setSubmitError('Network error. Please check your connection and try again.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
   return (
     <section id="booking" ref={ref} className="py-32 md:py-48 bg-[#0D0D0D]">
       <div className="max-w-[1000px] mx-auto px-8 md:px-16">
 
-        {/* Header */}
         <div className="mb-16 md:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -106,7 +67,7 @@ export default function SaloneBooking() {
           >
             <span className="inline-block w-8 h-px bg-[#B8975A]" />
             <span className="text-[10px] tracking-[0.35em] uppercase text-[#B8975A]">
-              Reserve Your Session
+              Salone del Mobile.Milano 2026
             </span>
           </motion.div>
           <motion.h2
@@ -115,9 +76,9 @@ export default function SaloneBooking() {
             transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="font-serif text-4xl md:text-5xl font-light text-[#F5F0E8] leading-[1.1]"
           >
-            Select your
+            Thank you for
             <br />
-            <em className="italic text-[#B8975A]">preferred appointment.</em>
+            <em className="italic text-[#B8975A]">an extraordinary edition.</em>
           </motion.h2>
         </div>
 
@@ -126,100 +87,16 @@ export default function SaloneBooking() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          {submitted ? (
-            <ConfirmationMessage booking={booking as BookingData} bookingRef={bookingRef} />
-          ) : (
-            <>
-              {/* Progress indicator */}
-              {!submitted && (
-                <div className="flex items-center gap-0 mb-14">
-                  {steps.map((s, i) => (
-                    <div key={s} className="flex items-center">
-                      <div
-                        className={`flex items-center justify-center w-7 h-7 text-[10px] transition-all duration-400 ${
-                          i < stepIndex
-                            ? 'bg-[#B8975A] text-[#0D0D0D]'
-                            : i === stepIndex
-                            ? 'border border-[#B8975A] text-[#B8975A]'
-                            : 'border border-[#F5F0E8]/10 text-[#F5F0E8]/20'
-                        }`}
-                      >
-                        {i < stepIndex ? (
-                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                            <path d="M2 5L4 7L8 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        ) : (
-                          <span className="font-light">{i + 1}</span>
-                        )}
-                      </div>
-                      {i < steps.length - 1 && (
-                        <div className={`w-16 h-px transition-all duration-400 ${i < stepIndex ? 'bg-[#B8975A]' : 'bg-[#F5F0E8]/8'}`} />
-                      )}
-                    </div>
-                  ))}
-                  <span className="ml-4 text-[10px] tracking-[0.2em] uppercase text-[#F5F0E8]/30">
-                    {step === 'date' && 'Choose date'}
-                    {step === 'time' && 'Choose time'}
-                    {step === 'guests' && 'Group size'}
-                    {step === 'details' && 'Your details'}
-                    {step === 'confirm' && 'Confirm'}
-                  </span>
-                </div>
-              )}
-
-              {/* Step panels */}
-              <AnimatePresence mode="wait">
-                {step === 'date' && (
-                  <StepPanel key="date">
-                    <StepDate
-                      selected={booking.date}
-                      onSelect={(date) => { update({ date }); setStep('time') }}
-                    />
-                  </StepPanel>
-                )}
-                {step === 'time' && (
-                  <StepPanel key="time">
-                    <StepTime
-                      date={booking.date!}
-                      selected={booking.slot}
-                      onSelect={(slot) => { update({ slot }); setStep('guests') }}
-                      onBack={() => setStep('date')}
-                    />
-                  </StepPanel>
-                )}
-                {step === 'guests' && (
-                  <StepPanel key="guests">
-                    <StepGuests
-                      selected={booking.guests}
-                      onSelect={(guests) => { update({ guests }); setStep('details') }}
-                      onBack={() => setStep('time')}
-                    />
-                  </StepPanel>
-                )}
-                {step === 'details' && (
-                  <StepPanel key="details">
-                    <StepDetails
-                      data={booking}
-                      onChange={update}
-                      onNext={() => setStep('confirm')}
-                      onBack={() => setStep('guests')}
-                    />
-                  </StepPanel>
-                )}
-                {step === 'confirm' && (
-                  <StepPanel key="confirm">
-                    <StepConfirm
-                      booking={booking as BookingData}
-                      onConfirm={handleSubmit}
-                      onBack={() => setStep('details')}
-                      submitting={submitting}
-                      error={submitError}
-                    />
-                  </StepPanel>
-                )}
-              </AnimatePresence>
-            </>
-          )}
+          <p className="text-[15px] font-light text-[#F5F0E8]/50 leading-relaxed max-w-xl mb-10">
+            The Salone del Mobile.Milano 2026 edition has concluded. We were honoured to welcome
+            our guests to an exclusive cinema experience in the heart of Milan.
+          </p>
+          <p className="text-[13px] text-[#F5F0E8]/30 leading-relaxed max-w-lg">
+            Stay tuned for upcoming events and experiences. For enquiries, please{' '}
+            <a href="mailto:geral@luxurycine.com" className="text-[#B8975A] hover:text-[#D4AF72] transition-colors duration-300">
+              contact us
+            </a>.
+          </p>
         </motion.div>
       </div>
     </section>

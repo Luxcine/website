@@ -27,7 +27,6 @@ export default function SaloneHero() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="inline-flex items-center gap-3 border border-[#B8975A]/30 px-5 py-2.5 mb-10"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#B8975A] animate-pulse" />
           <span className="text-[9px] tracking-[0.35em] uppercase text-[#B8975A]">
             Salone del Mobile.Milano 2026 — April 21–26
           </span>
@@ -62,19 +61,13 @@ export default function SaloneHero() {
           className="flex flex-col sm:flex-row gap-4"
         >
           <a
-            href="#booking"
-            className="inline-flex items-center gap-3 bg-[#B8975A] text-[#0D0D0D] text-[11px] tracking-[0.2em] uppercase px-10 py-4 hover:bg-[#D4AF72] transition-colors duration-300 font-medium"
+            href="#experience"
+            className="inline-flex items-center gap-3 border border-[#B8975A] text-[#B8975A] text-[11px] tracking-[0.2em] uppercase px-10 py-4 hover:bg-[#B8975A]/10 transition-colors duration-300 font-medium"
           >
-            Reserve Your Session
+            Discover the Experience
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </a>
-          <a
-            href="#experience"
-            className="inline-flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase text-[#F5F0E8]/50 hover:text-[#F5F0E8] transition-colors duration-300 px-2 py-4"
-          >
-            Discover the Experience
           </a>
         </motion.div>
       </div>
